@@ -1,14 +1,14 @@
 #include <iostream>
-#include "libs/writer/writer.h"
+#include "libs/dataGеn/dataGеn.h"
 
 using namespace std;
 
 int main() {
 
-    Writer obj;
+    DataGеnerator obj;
     obj.readConfig();
     string path = "/home/ann/WORK/work_qt/StringCoder/FilesAndStrings/originCode.txt";
-    obj.genData();
+
     obj.writeToFile( path );
 
 

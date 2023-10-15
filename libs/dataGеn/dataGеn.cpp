@@ -1,11 +1,11 @@
-#include "writer.h"
+#include "dataGеn.h"
 #include <iostream>
 
-Writer::Writer() {
+DataGеnerator::DataGеnerator() {
 
 }
 
-void Writer::readConfig() {
+void DataGеnerator::readConfig() {
 
     std::ifstream configFile( "/home/ann/WORK/work_qt/StringCoder/FilesAndStrings/config.txt" ); // open file
     if( !configFile.is_open() ) {
@@ -27,14 +27,14 @@ void Writer::readConfig() {
     configFile.close();
 }
 
-void Writer::getValue( std::ifstream& configFile, char pole ) {
+void DataGеnerator::getValue( std::ifstream& configFile, char pole ) {
 
     std::string str;
     std::getline( configFile, str );
     uint8_t pos = str.std::string::find( '=', 0 );
     str.std::string::erase( 0, pos + 1 );
     if( pole == 's' ) {
-        this->sym = str[ 0 ];
+        this->sym = str [ 0 ];
     }
     if( pole == 'N' ) {
         this->N = std::stoi( str );
@@ -45,28 +45,19 @@ void Writer::getValue( std::ifstream& configFile, char pole ) {
 
 }
 
-void Writer::genData() {
+
+void DataGеnerator::writeToFile( std::string& path ) {
 
     srand( time( NULL ) );
-
-    for( uint32_t i = 0; i < k; i++ ) {
-
-        uint32_t l = 1 + rand() % ( 10 * N );
-        data.push_back( l );
-    }
-}
-
-void Writer::writeToFile( std::string& path ) {
-
 
     std::ofstream file( path );
 
     for( uint32_t numOfStr = 0; numOfStr < this->k; numOfStr++ ) {
 
+        uint32_t l = 1 + rand() % ( 1 * N );
+        file << l;
 
-        file << data[ numOfStr ];
-
-        for( uint32_t length = 0; length < data[ numOfStr ]; length++ ) {
+        for( uint32_t length = 0; length < l; length++ ) {
             file << sym;
 
         }
@@ -79,7 +70,3 @@ void Writer::writeToFile( std::string& path ) {
 
 }
 
-void Writer::pack() {
-
-
-}
