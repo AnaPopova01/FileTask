@@ -3,7 +3,7 @@
 #include <cstdint>
 #include <string>
 #include <fstream>
-#include <vector>
+
 
 class DataGеnerator {
 public:
@@ -11,9 +11,10 @@ public:
     DataGеnerator();
 
     void readConfig();
-
     void writeToFile( std::string& path ); // запись исходной последовательности в файл
-
+    uint32_t getN() {
+        return N;
+    }
 
 private:
 

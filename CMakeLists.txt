@@ -10,7 +10,11 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 add_executable(FilesAndStrings main.cpp)
 
 add_subdirectory(libs/dataGеn)
+add_subdirectory(libs/dataWrite)
+
 target_link_libraries(${PROJECT_NAME} GenData)
+
+target_link_libraries(${PROJECT_NAME} WriteData)
 
 install(TARGETS FilesAndStrings
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})

@@ -55,7 +55,7 @@ void DataGеnerator::writeToFile( std::string& path ) {
     for( uint32_t numOfStr = 0; numOfStr < this->k; numOfStr++ ) {
 
         uint32_t l = 1 + rand() % ( 1 * N );
-        file << l;
+        // file << l;
 
         for( uint32_t length = 0; length < l; length++ ) {
             file << sym;
