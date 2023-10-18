@@ -15,7 +15,10 @@ int main() {
     string inpath = "/home/ann/WORK/work_qt/StringCoder/FilesAndStrings/originCode.txt";
     // obj.writeToFile( inpath );
 
-    DataWrite packer( inpath, obj.getN() );
+    // uint32_t maxPackLen = obj.getN();
+    uint32_t maxPackLen = 50;
+
+    DataWrite packer( inpath, maxPackLen );
     string outpath = "/home/ann/WORK/work_qt/StringCoder/FilesAndStrings/packetCode.txt";
     packer.writeFile( outpath );
 

@@ -4,7 +4,7 @@
 DataWrite::DataWrite( std::string& path, uint16_t Num ) {
     this->N = Num;
     this->origpath = path;
-    this->spaceInPack = Num - sizeOfHeaderInfo;
+    this->spaceInPack = Num - this->k_in_1stHead - this->k_in_2ndHead;
 }
 
 void DataWrite::writeFile( std::string& outpath ) {
@@ -40,13 +40,13 @@ void DataWrite::formPack( std::string& str ) {
     if( length > spaceInPack ) { // проверка влезет ли строка в пакет
 
 
-        uint16_t kOfPacket = ( spaceInPack / 4 );
+        uint16_t kOfPacket = ( spaceInPack / ( k_in_data + 1 ) ); // какое количество пакетов можно добавить в текущую строку
         setkOfSym( kOfPacket );
-        for( uint16_t i = 0; i < kOfPacket * 4; i++ ) {
+        for( uint16_t i = 0; i < kOfPacket * ( k_in_data + 1 ); i++ ) {
             data = data + str[ i ];
         }
-        str.erase( 0, kOfPacket * 4 );
-        while( data.size() < N - sizeOfHeaderInfo ) {
+        str.erase( 0, kOfPacket * ( k_in_data + 1 ) );
+        while( data.size() < N - k_in_1stHead - k_in_2ndHead ) {
             data = data + "&";
         }
         printPack();
@@ -79,7 +79,7 @@ void DataWrite::nextPacket() {
 
     this->currpackNum++;
     // newPackFlag = true;
-    this->spaceInPack = N - sizeOfHeaderInfo;
+    this->spaceInPack = N - k_in_1stHead - k_in_2ndHead;
     this->kOfSym = 0;
     this->data = "";
 }
@@ -114,24 +114,24 @@ void DataWrite::addInfo( std::string& str ) {
     for( uint16_t i = 0; i < endOfStr; i++ ) {
 
         payloadheader = std::to_string( i );
-        while( payloadheader.size() != 3 ) {
+        while( payloadheader.size() != this->k_in_data ) {
             payloadheader = "0" + payloadheader;
         }
-        str.insert( i * 4, payloadheader );
+        str.insert( i * ( k_in_data + 1 ), payloadheader );
     }
 }
 
 void DataWrite::printHeadInfo() {
 
     std::string header1 = std::to_string( currpackNum );
-    while( header1.size() != 4 ) {
+    while( header1.size() != k_in_1stHead ) {
         header1 = "0" + header1;
     }
     outfile << header1 << "\t";
 
 
     std::string header2 = std::to_string( kOfSym );
-    while( header2.size() != 4 ) {
+    while( header2.size() != k_in_2ndHead ) {
         header2 = "0" + header2;
     }
     outfile << header2 << "\t";
