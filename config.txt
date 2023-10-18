@@ -1,3 +1,3 @@
-package_length=100
+package_length=50
 symbol=*
-quantity_of_strings=120
+quantity_of_strings=100

@@ -18,7 +18,7 @@ public:
 
 private:
 
-    uint32_t N = 110; // максимальная длина пакета в байтах, задается в config
+    uint16_t N = 110; // максимальная длина пакета в байтах, задается в config
     char sym = '@';
     uint32_t k = 100; // количество строк
     void getValue( std::ifstream& configFile, char pole );
