@@ -10,6 +10,7 @@ DataWrite::DataWrite( std::string& path, uint16_t Num ) {
 void DataWrite::writeFile( std::string& outpath ) {
 
     std::ifstream originFile( origpath ); // open file with origin strings
+
     if( !originFile.is_open() ) {
 
         throw std::runtime_error( "cant open file " );
@@ -17,17 +18,25 @@ void DataWrite::writeFile( std::string& outpath ) {
     } else {
 
         this->outfile.open( outpath ); // open file to write
-        std::string str; // string for data
 
-        while( !originFile.eof() ) { // until file finish
+        if( !originFile.is_open() ) {
+
+            throw std::runtime_error( "cant open file " );
+
+        } else   {
+
+            std::string str; // string for data
+
+            while( !originFile.eof() ) { // until file finish
 
 
-            std::getline( originFile, str ); // read string
-            addInfo( str ); // добавляем служебную информацию
-            formPack( str ); // write to file
+                std::getline( originFile, str ); // read string
+                addInfo( str ); // добавляем служебную информацию
+                formPack( str ); // write to file
+            }
+
+            outfile.close(); // close file
         }
-
-        outfile.close(); // close file
 
     }
 }

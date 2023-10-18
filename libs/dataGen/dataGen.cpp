@@ -1,13 +1,13 @@
-#include "dataGеn.h"
+#include "dataGen.h"
 #include <iostream>
 
-DataGеnerator::DataGеnerator() {
+DataGenerator::DataGenerator() {
 
 }
 
-void DataGеnerator::readConfig() {
+void DataGenerator::readConfig( const std::string& filename ) {
 
-    std::ifstream configFile( "/home/ann/WORK/work_qt/StringCoder/FilesAndStrings/config.txt" ); // open file
+    std::ifstream configFile( filename ); // open file
     if( !configFile.is_open() ) {
         throw std::runtime_error( "cant open file " ); // если не получилось throw
     } else {
@@ -27,7 +27,7 @@ void DataGеnerator::readConfig() {
     configFile.close();
 }
 
-void DataGеnerator::getValue( std::ifstream& configFile, char pole ) {
+void DataGenerator::getValue( std::ifstream& configFile, char pole ) {
 
     std::string str;
     std::getline( configFile, str );
@@ -46,7 +46,7 @@ void DataGеnerator::getValue( std::ifstream& configFile, char pole ) {
 }
 
 
-void DataGеnerator::writeToFile( std::string& path ) {
+void DataGenerator::writeToFile( std::string& path ) {
 
     srand( time( NULL ) );
 

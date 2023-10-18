@@ -5,12 +5,12 @@
 #include <fstream>
 
 
-class DataGеnerator {
+class DataGenerator {
 public:
 
-    DataGеnerator();
+    DataGenerator();
 
-    void readConfig();
+    void readConfig( const std::string& filename );
     void writeToFile( std::string& path ); // запись исходной последовательности в файл
     uint32_t getN() {
         return N;
@@ -18,7 +18,7 @@ public:
 
 private:
 
-    uint16_t N = 110; // максимальная длина пакета в байтах, задается в config
+    uint16_t N = 50; // максимальная длина пакета в байтах, задается в config
     char sym = '@';
     uint32_t k = 100; // количество строк
     void getValue( std::ifstream& configFile, char pole );

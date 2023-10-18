@@ -7,8 +7,8 @@ class DataWrite {
 
 public:
 
-    DataWrite( std::string& path, uint16_t Num = 60 );
-    void writeFile( std::string& outpath ); // читаем файл
+    DataWrite( std::string& path, uint16_t Num = 60 ); // const + change names of poles
+    void writeFile( std::string& outpath ); // читаем файл //const
 
 
 

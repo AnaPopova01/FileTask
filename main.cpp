@@ -1,27 +1,31 @@
 #include <iostream>
-#include "libs/dataGеn/dataGеn.h"
+#include "libs/dataGen/dataGen.h"
 #include "libs/dataWrite/dataWrite.h"
 
-using namespace std;
+struct Header {
+    const uint32_t magic{ 0000000 };
+    uint32_t counter;
+    uint32_t size; // random (1:N)
+};
 
-// what if N нечетный
-// динамический размер на инфу для данных и заголовка
-// нахуя подзаголовки к данным
 
-int main() {
+int main() {  // в качестве аргумента main кидаем название файла конфигурации (или путь к нему если он не в папке с бинарником), чтобы можно было его вызвать из консоли (сигнатура в тетради)
 
-    DataGеnerator obj;
-    obj.readConfig();
-    string inpath = "/home/ann/WORK/work_qt/StringCoder/FilesAndStrings/originCode.txt";
+    DataGenerator obj;
+    std::string inpath = "/home/ann/WORK/work_qt/StringCoder/FilesAndStrings/config.txt";
+    obj.readConfig( inpath );
     // obj.writeToFile( inpath );
 
     // uint32_t maxPackLen = obj.getN();
     uint32_t maxPackLen = 50;
 
     DataWrite packer( inpath, maxPackLen );
-    string outpath = "/home/ann/WORK/work_qt/StringCoder/FilesAndStrings/packetCode.txt";
+    std::string outpath = "/home/ann/WORK/work_qt/StringCoder/FilesAndStrings/packetCode.txt";
     packer.writeFile( outpath );
 
+
+    uint32_t magic = 0xBABADEDA;
+    std::cerr << " magic: " << magic << "\n";
 
     return 0;
 }
