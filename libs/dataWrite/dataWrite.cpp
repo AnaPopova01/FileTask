@@ -1,13 +1,13 @@
 #include "dataWrite.h"
 #include <iostream>
 
-DataWrite::DataWrite( std::string& path, uint16_t Num ) {
-    this->N = Num;
-    this->origpath = path;
-    this->spaceInPack = Num - this->k_in_1stHead - this->k_in_2ndHead;
+DataWrite::DataWrite(const std::string &inputpath, const uint16_t maxPackLen ) {
+    this->N = maxPackLen;
+    this->origpath = inputpath;
+    this->spaceInPack = maxPackLen - this->k_in_1stHead - this->k_in_2ndHead;
 }
 
-void DataWrite::writeFile( std::string& outpath ) {
+void DataWrite::writeFile(const std::string &outpath ) {
 
     std::ifstream originFile( origpath ); // open file with origin strings
 

@@ -23,7 +23,7 @@ public:
         return this->k;
     }
     uint16_t getMaxLen() {
-        return max_length;
+        return N * rmax_len;
     }
 
 private:
@@ -31,7 +31,7 @@ private:
     uint16_t N = 50; // максимальная длина пакета в байтах, задается в config
     char sym = '@'; // символ для заполнения строк
     uint32_t k = 100; // количество строк
-    uint16_t max_length = N * 1; // максимальная длина строки
+    uint16_t rmax_len =  1;// коэффициент для установки максимальной длины строки
     void getSett( std::ifstream& configFile, char pole ); // чтение настроек из взятой из файла строки
 
 };

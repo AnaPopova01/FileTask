@@ -20,9 +20,9 @@ TEST( GeneratorTests, openAndConfig ) {
     std::string path = "dat/test_config.txt";
 
     obj.readConfig( path );
-    ASSERT_EQ( 6, obj.getN() );
+    ASSERT_EQ( 10, obj.getN() );
     ASSERT_EQ( '#', obj.getSym() );
-    ASSERT_EQ( 7, obj.getK() );
+    ASSERT_EQ( 20, obj.getK() );
 
 }
 
@@ -56,14 +56,7 @@ TEST( GeneratorTests, writeToFile ) {
         }
         ASSERT_EQ( counter, obj.getK() );
 
-
-
     }
-
-
-
-
-
 
 }
 

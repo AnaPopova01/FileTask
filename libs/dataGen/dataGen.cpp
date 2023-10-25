@@ -38,6 +38,7 @@ void DataGenerator::getSett( std::ifstream& configFile, char pole ) {
     }
     if( pole == 'N' ) {
         this->N = std::stoi( str );
+
     }
     if( pole == 'k' ) {
         this->k = std::stoi( str );
@@ -54,7 +55,7 @@ void DataGenerator::writeToFile( std::string& path ) {
 
     for( uint32_t numOfStr = 0; numOfStr < this->k; numOfStr++ ) {
 
-        uint32_t l = 1 + rand() % ( max_length ); // set current length
+        uint32_t l = 1 + rand() % ( rmax_len * N ); // set current length
         // file << l;
 
         for( uint32_t length = 0; length < l; length++ ) {
