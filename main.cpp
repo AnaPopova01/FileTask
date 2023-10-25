@@ -1,6 +1,6 @@
 #include <iostream>
 #include "libs/dataGen/dataGen.h"
-#include "libs/dataWrite/dataWrite.h"
+#include "libs/dataPack/src/dataPack.h" // потом заменить на фабрику
 
 struct Header {
     const uint32_t magic{ 0000000 };
@@ -22,8 +22,8 @@ int main() {
     uint32_t maxPackLen = 50;
 
     DataWrite packer( origstrPath, maxPackLen );
-    std::string outpath = "/home/ann/WORK/work_qt/StringCoder/FilesAndStrings/packetCode.txt";
-    packer.writeFile( outpath );
+    std::string outpath = "/home/ann/WORK/work_qt/StringCoder/FilesAndStrings/packedCode.txt";
+    packer.writeToFile( outpath );
 
 
     uint32_t magic = 0xBABADEDA;

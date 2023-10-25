@@ -8,7 +8,7 @@ class DataWrite {
 public:
 
     DataWrite( const std::string& inputpath, const uint16_t maxPackLen = 60 ); // const + change names of poles
-    void writeFile( const std::string& outpath ); // читаем файл
+    void writeToFile( const std::string& outpath ); // читаем файл
 
 
 
@@ -17,7 +17,6 @@ private:
     std::string origpath; // path to originCode
     std::ofstream outfile; // path to file for writing data
     uint16_t N; // max length of packet
-    bool mixFlag = 0; // on/of mix of write data
 
     // размер служебных полей
     uint8_t k_in_1stHead = 4; // amount of symbols in 1st part of header info
@@ -34,12 +33,12 @@ private:
 
 
     void formPack( std::string& str );
-    void addInfo( std::string& str );
-    void printHeadInfo();
+    void addInfo( std::string& str ); //
+    void printHeadInfo(); // заголовок печатается отдельно от данных
     void nextPacket();
     void resetPackSpace( uint16_t newSpace );
     void resetPackSpace();
-    void printPack();
+    void printPack(); //
     void setkOfSym( uint16_t newK  );
 };
 

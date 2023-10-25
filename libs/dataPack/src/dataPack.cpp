@@ -1,13 +1,13 @@
-#include "dataWrite.h"
+#include "dataPack.h"
 #include <iostream>
 
-DataWrite::DataWrite(const std::string &inputpath, const uint16_t maxPackLen ) {
+DataWrite::DataWrite( const std::string& inputpath, const uint16_t maxPackLen ) {
     this->N = maxPackLen;
     this->origpath = inputpath;
     this->spaceInPack = maxPackLen - this->k_in_1stHead - this->k_in_2ndHead;
 }
 
-void DataWrite::writeFile(const std::string &outpath ) {
+void DataWrite::writeToFile( const std::string& outpath ) {
 
     std::ifstream originFile( origpath ); // open file with origin strings
 
@@ -23,7 +23,7 @@ void DataWrite::writeFile(const std::string &outpath ) {
 
             throw std::runtime_error( "cant open file " );
 
-        } else   {
+        } else {
 
             std::string str; // string for data
 
@@ -139,25 +139,13 @@ void DataWrite::printHeadInfo() {
     outfile << header1 << "\t";
 
 
-    std::string header2 = std::to_string( kOfSym );
-    while( header2.size() != k_in_2ndHead ) {
-        header2 = "0" + header2;
-    }
-    outfile << header2 << "\t";
+// std::string header2 = std::to_string( kOfSym );
+// while( header2.size() != k_in_2ndHead ) {
+// header2 = "0" + header2;
+// }
+// outfile << header2 << "\t";
 
 }
 
 
-// how empty space now?
-// if less than length of string then divide string
-// if divide is yes
-// if divide is no
 
-
-// вызвать для обеих функцию записи
-// если нет то вызвать функцию записи
-
-// функция записи
-// добавить служебную инфу
-// влезет ли строка в текущий пакет заданной длины с учетом служебной инфы?
-// если да то записать в файл     если нет то разбить на подстроки, записать что влезет а остаток в следующий пакет
