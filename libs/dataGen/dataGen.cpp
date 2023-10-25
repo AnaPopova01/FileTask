@@ -18,16 +18,16 @@ void DataGenerator::readConfig( const std::string& filename ) {
         // delete until '='
         // write to fx  pole
 
-        getValue( configFile, 'N' );
-        getValue( configFile, 's' );
-        getValue( configFile, 'k' );
+        getSett( configFile, 'N' );
+        getSett( configFile, 's' );
+        getSett( configFile, 'k' );
 
     }
 
     configFile.close();
 }
 
-void DataGenerator::getValue( std::ifstream& configFile, char pole ) {
+void DataGenerator::getSett( std::ifstream& configFile, char pole ) {
 
     std::string str;
     std::getline( configFile, str );
@@ -54,7 +54,7 @@ void DataGenerator::writeToFile( std::string& path ) {
 
     for( uint32_t numOfStr = 0; numOfStr < this->k; numOfStr++ ) {
 
-        uint32_t l = 1 + rand() % ( 1 * N ); // set current length
+        uint32_t l = 1 + rand() % ( max_length ); // set current length
         // file << l;
 
         for( uint32_t length = 0; length < l; length++ ) {
