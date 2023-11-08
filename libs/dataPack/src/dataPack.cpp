@@ -1,15 +1,17 @@
 #include "dataPack.h"
 #include <iostream>
 
-DataWrite::DataWrite( const std::string& inputpath, const uint16_t maxPackLen ) {
+
+/*
+   AlignedWriter::AlignedWriter( const std::string& inputpath, const uint16_t maxPackLen ) {
     this->N = maxPackLen;
-    this->origpath = inputpath;
+    this->inpath = inputpath;
     this->spaceInPack = maxPackLen - this->k_in_1stHead - this->k_in_2ndHead;
-}
+   }
 
-void DataWrite::writeToFile( const std::string& outpath ) {
+   void AlignedWriter::writeToFile( const std::string& outpath ) {
 
-    std::ifstream originFile( origpath ); // open file with origin strings
+    std::ifstream originFile( inpath ); // open file with origin strings
 
     if( !originFile.is_open() ) {
 
@@ -39,9 +41,9 @@ void DataWrite::writeToFile( const std::string& outpath ) {
         }
 
     }
-}
+   }
 
-void DataWrite::formPack( std::string& str ) {
+   void AlignedWriter::formPack( std::string& str ) {
 
     uint16_t length = str.size();
 
@@ -82,18 +84,18 @@ void DataWrite::formPack( std::string& str ) {
 
     }
 
-}
+   }
 
-void DataWrite::nextPacket() {
+   void AlignedWriter::nextPacket() {
 
     this->currpackNum++;
     // newPackFlag = true;
     this->spaceInPack = N - k_in_1stHead - k_in_2ndHead;
     this->kOfSym = 0;
     this->data = "";
-}
+   }
 
-void DataWrite::printPack() {
+   void AlignedWriter::printPack() {
 
     printHeadInfo();
     for( uint16_t i = 0; i < data.size(); i++ ) {
@@ -101,21 +103,21 @@ void DataWrite::printPack() {
 
     }
     outfile << "\n";
-}
+   }
 
-void DataWrite::resetPackSpace( uint16_t newSpace  ) {
+   void AlignedWriter::resetPackSpace( uint16_t newSpace  ) {
 
     this->spaceInPack = newSpace;
-}
+   }
 
-void DataWrite::setkOfSym( uint16_t newK  ) {
+   void AlignedWriter::setkOfSym( uint16_t newK  ) {
 
     this->kOfSym += newK;
-}
+   }
 
 
 
-void DataWrite::addInfo( std::string& str ) {
+   void AlignedWriter::addInfo( std::string& str ) {
 
     std::string payloadheader;
     uint16_t endOfStr = str.size();
@@ -128,9 +130,9 @@ void DataWrite::addInfo( std::string& str ) {
         }
         str.insert( i * ( k_in_data + 1 ), payloadheader );
     }
-}
+   }
 
-void DataWrite::printHeadInfo() {
+   void AlignedWriter::printHeadInfo() {
 
     std::string header1 = std::to_string( currpackNum );
     while( header1.size() != k_in_1stHead ) {
@@ -139,13 +141,13 @@ void DataWrite::printHeadInfo() {
     outfile << header1 << "\t";
 
 
-// std::string header2 = std::to_string( kOfSym );
-// while( header2.size() != k_in_2ndHead ) {
-// header2 = "0" + header2;
-// }
-// outfile << header2 << "\t";
+   // std::string header2 = std::to_string( kOfSym );
+   // while( header2.size() != k_in_2ndHead ) {
+   // header2 = "0" + header2;
+   // }
+   // outfile << header2 << "\t";
 
-}
+   }
 
 
-
+ */

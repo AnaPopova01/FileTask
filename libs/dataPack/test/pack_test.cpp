@@ -1,8 +1,10 @@
 #include <gtest/gtest.h>
 #include "src/dataPack.h"
+#include "src/randPack.h"
+#include "include/packerfactory.h"
 
 TEST( WriterTests, creating ) {
 
-    std::string inputpath;
-    // DataWrite obj;
+    auto tatus = createPackerImpl();
+    tatus->writeToFile();
 }

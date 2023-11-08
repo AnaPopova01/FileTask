@@ -11,7 +11,8 @@ add_library(${PROJECT_NAME} SHARED
     src/dataPack.cpp
     src/dataPack.h
     src/packerfactory.cpp
-
+    src/randPack.cpp
+    src/randPack.h
 
 )
 
