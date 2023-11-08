@@ -2,16 +2,18 @@
 #include <iostream>
 
 
-/*
-   AlignedWriter::AlignedWriter( const std::string& inputpath, const uint16_t maxPackLen ) {
-    this->N = maxPackLen;
-    this->inpath = inputpath;
-    this->spaceInPack = maxPackLen - this->k_in_1stHead - this->k_in_2ndHead;
-   }
 
-   void AlignedWriter::writeToFile( const std::string& outpath ) {
+// AlignedImpl::AlignedImpl( const std::string& inputpath, const uint16_t maxPackLen ) {
+// this->N = maxPackLen;
+// this->inpath = inputpath;
+// this->spaceInPack = maxPackLen - this->k_in_1stHead - this->k_in_2ndHead;
+// }
 
-    std::ifstream originFile( inpath ); // open file with origin strings
+void AlignedImpl::writeToFile( const string& inputfile, const string& outputfile, Protocol& protocol ) {
+
+    this->prot = protocol;
+    this->spaceInPack = prot.N - this->k_in_1stHead; // - this->k_in_2ndHead;
+    std::ifstream originFile( inputfile ); // open file with origin strings
 
     if( !originFile.is_open() ) {
 
@@ -19,7 +21,7 @@
 
     } else {
 
-        this->outfile.open( outpath ); // open file to write
+        this->outfile.open( outputfile ); // open file to write
 
         if( !originFile.is_open() ) {
 
@@ -41,9 +43,9 @@
         }
 
     }
-   }
+}
 
-   void AlignedWriter::formPack( std::string& str ) {
+void AlignedImpl::formPack( std::string& str ) {
 
     uint16_t length = str.size();
 
@@ -57,7 +59,7 @@
             data = data + str[ i ];
         }
         str.erase( 0, kOfPacket * ( k_in_data + 1 ) );
-        while( data.size() < N - k_in_1stHead - k_in_2ndHead ) {
+        while( data.size() < prot.N - k_in_1stHead ) {
             data = data + "&";
         }
         printPack();
@@ -68,14 +70,14 @@
 
     } else if( length < spaceInPack ) {
 
-        setkOfSym( length / 4 );
+        setkOfSym( length / this->k_in_data + 1 );
         data = data + str;
         // newPackFlag = false; // useless
         resetPackSpace( spaceInPack - length );
 
     } else if( length == spaceInPack ) {// пишем в файл и (номер пакета) ++
 
-        setkOfSym( length / 4 );
+        setkOfSym( length / this->k_in_data + 1 );
         data = data + str;
 
         printPack();
@@ -84,40 +86,43 @@
 
     }
 
-   }
+}
 
-   void AlignedWriter::nextPacket() {
+void AlignedImpl::nextPacket() {
 
     this->currpackNum++;
     // newPackFlag = true;
-    this->spaceInPack = N - k_in_1stHead - k_in_2ndHead;
+    this->spaceInPack = prot.N - k_in_1stHead;// - k_in_2ndHead;
     this->kOfSym = 0;
     this->data = "";
-   }
+}
 
-   void AlignedWriter::printPack() {
+void AlignedImpl::printPack() {
 
+    if( this->currpackNum != 0 ) {
+        outfile << "\n";
+    }
+    ;
     printHeadInfo();
     for( uint16_t i = 0; i < data.size(); i++ ) {
         outfile << data[ i ];
 
     }
-    outfile << "\n";
-   }
+}
 
-   void AlignedWriter::resetPackSpace( uint16_t newSpace  ) {
+void AlignedImpl::resetPackSpace( uint16_t newSpace  ) {
 
     this->spaceInPack = newSpace;
-   }
+}
 
-   void AlignedWriter::setkOfSym( uint16_t newK  ) {
+void AlignedImpl::setkOfSym( uint16_t newK  ) {
 
     this->kOfSym += newK;
-   }
+}
 
 
 
-   void AlignedWriter::addInfo( std::string& str ) {
+void AlignedImpl::addInfo( std::string& str ) {
 
     std::string payloadheader;
     uint16_t endOfStr = str.size();
@@ -130,24 +135,17 @@
         }
         str.insert( i * ( k_in_data + 1 ), payloadheader );
     }
-   }
+}
 
-   void AlignedWriter::printHeadInfo() {
+void AlignedImpl::printHeadInfo() {
 
     std::string header1 = std::to_string( currpackNum );
     while( header1.size() != k_in_1stHead ) {
         header1 = "0" + header1;
     }
-    outfile << header1 << "\t";
+    outfile << header1; // << "\t";
+
+}
 
 
-   // std::string header2 = std::to_string( kOfSym );
-   // while( header2.size() != k_in_2ndHead ) {
-   // header2 = "0" + header2;
-   // }
-   // outfile << header2 << "\t";
 
-   }
-
-
- */

@@ -64,10 +64,29 @@ std::unique_ptr< IPacker > createPackerImpl() {
 
     switch( type ) {
     case PackerType::Aligned:
-        ret = std::make_unique< AlignedImpl >( getProtocol() );
+        ret = std::make_unique< AlignedImpl >();
         break;
     case PackerType::Random:
-        ret = std::make_unique< RandomImpl >( getProtocol() );
+        ret = std::make_unique< RandomImpl >();
+        break;
+    default:
+        throw std::runtime_error( " unsupported printer type " + std::to_string( static_cast< int >( type ) ) );
+        break;
+    }
+
+    return ret;
+}
+
+std::unique_ptr< IPacker > createPackerImpl( PackerType type ) {
+
+    std::unique_ptr< IPacker > ret;
+
+    switch( type ) {
+    case PackerType::Aligned:
+        ret = std::make_unique< AlignedImpl >();
+        break;
+    case PackerType::Random:
+        ret = std::make_unique< RandomImpl >();
         break;
     default:
         throw std::runtime_error( " unsupported printer type " + std::to_string( static_cast< int >( type ) ) );

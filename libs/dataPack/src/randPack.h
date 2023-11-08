@@ -9,12 +9,15 @@ class RandomImpl: public BaseImpl {
 
 public:
 
-    using BaseImpl::BaseImpl;
-    void writeToFile() override {
+    // using BaseImpl::BaseImpl;
+
+    void writeToFile() {
         std::cerr << "wtf from random" << std::endl;
     }
 
-
+    virtual void writeToFile( const string& inputfile, const string& outputfile, Protocol& prot ) override final {
+        std::cerr << "lol" << std::endl;
+    }
 
 
 };
