@@ -9,10 +9,11 @@
 //// tatus->writeToFile();
 // }
 
-TEST( PackerTests, AlignedtWriteNoMix ) {
+TEST( PackerTests, AlignedtWriteNoMixStd ) {
 
     auto tatus = createPackerImpl( PackerType::Aligned );
     Protocol prot { ProtocolType::Standart,  50, 0 };
+    // tatus->getKey();
 
     const string inputfile = "/home/ann/WORK/work_qt/StringCoder/FilesAndStrings/bin/originCode.txt";
     const string outputfile = "/home/ann/WORK/work_qt/StringCoder/FilesAndStrings/bin/aligned_NO_mix.txt";
@@ -39,6 +40,19 @@ TEST( PackerTests, AlignedtWriteNoMix ) {
         }
 
     }
+
+
+}
+
+TEST( PackerTests, RandomtWriteNoMixStd ) {
+
+    auto tatus = createPackerImpl( PackerType::Random );
+    Protocol prot { ProtocolType::Standart,  50, 0 };
+
+    const string inputfile = "/home/ann/WORK/work_qt/StringCoder/FilesAndStrings/bin/originCode.txt";
+    const string outputfile = "/home/ann/WORK/work_qt/StringCoder/FilesAndStrings/bin/random_NO_mix_Mag.txt";
+    tatus->writeToFile( inputfile, outputfile, prot );
+
 
 
 

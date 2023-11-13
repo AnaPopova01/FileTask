@@ -1,19 +1,15 @@
 #include "dataPack.h"
+
 #include <iostream>
 
 
-
-// AlignedImpl::AlignedImpl( const std::string& inputpath, const uint16_t maxPackLen ) {
-// this->N = maxPackLen;
-// this->inpath = inputpath;
-// this->spaceInPack = maxPackLen - this->k_in_1stHead - this->k_in_2ndHead;
-// }
-
 void AlignedImpl::writeToFile( const string& inputfile, const string& outputfile, Protocol& protocol ) {
 
-    this->prot = protocol;
-    this->spaceInPack = prot.N - this->k_in_1stHead; // - this->k_in_2ndHead;
-    std::ifstream originFile( inputfile ); // open file with origin strings
+    setProtocol( protocol );
+
+
+    this->spaceInPack = 0;// resetPackSpace( prot.N - this->k_in_1stHead ); // - this->k_in_2ndHead;
+    std::ifstream originFile( inputfile ); // open file with origin data
 
     if( !originFile.is_open() ) {
 
@@ -22,8 +18,7 @@ void AlignedImpl::writeToFile( const string& inputfile, const string& outputfile
     } else {
 
         this->outfile.open( outputfile ); // open file to write
-
-        if( !originFile.is_open() ) {
+        if( !outfile.is_open() ) {
 
             throw std::runtime_error( "cant open file " );
 
@@ -34,6 +29,8 @@ void AlignedImpl::writeToFile( const string& inputfile, const string& outputfile
             while( !originFile.eof() ) { // until file finish
 
 
+                // createPacket();
+                // printPacket();
                 std::getline( originFile, str ); // read string
                 addInfo( str ); // добавляем служебную информацию
                 formPack( str ); // write to file
@@ -147,5 +144,7 @@ void AlignedImpl::printHeadInfo() {
 
 }
 
-
+void AlignedImpl::setProtocol( Protocol& protocol ) {
+    this->prot = protocol;
+}
 
