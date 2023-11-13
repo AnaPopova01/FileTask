@@ -43,6 +43,8 @@ public:
 protected:
 
 
+
+
     Protocol prot { ProtocolType::Standart,  50, 0 };
 
     // размер служебных полей

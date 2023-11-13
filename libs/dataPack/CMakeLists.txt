@@ -13,6 +13,8 @@ add_library(${PROJECT_NAME} SHARED
     src/packerfactory.cpp
     src/randPack.cpp
     src/randPack.h
+    src/basepack.cpp
+    src/basepack.h
 
 )
 

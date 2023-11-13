@@ -50,7 +50,7 @@ TEST( PackerTests, RandomtWriteNoMixStd ) {
     Protocol prot { ProtocolType::Standart,  50, 0 };
 
     const string inputfile = "/home/ann/WORK/work_qt/StringCoder/FilesAndStrings/bin/originCode.txt";
-    const string outputfile = "/home/ann/WORK/work_qt/StringCoder/FilesAndStrings/bin/random_NO_mix_Mag.txt";
+    const string outputfile = "/home/ann/WORK/work_qt/StringCoder/FilesAndStrings/bin/random_NO_mix_Std.txt";
     tatus->writeToFile( inputfile, outputfile, prot );
 
 

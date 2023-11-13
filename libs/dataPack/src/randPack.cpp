@@ -55,9 +55,11 @@ void RandomImpl::formPack( std::string& str ) {
             data = data + str[ i ];
         }
         str.erase( 0, kOfPacket * ( k_in_data + 1 ) );
-// while( data.size() < prot.N - k_in_1stHead ) {
-// data = data + "&";
-// }
+        if( prot.type == ProtocolType::Standart ) {
+            while( data.size() < prot.N - k_in_1stHead ) {
+                data = data + "&";
+            }
+        }
         printPack();
         nextPacket();
         formPack( str );
@@ -100,7 +102,9 @@ void RandomImpl::printPack() {
     }
     ;
     printHeadInfo();
+    vecdata.push_back( data );
     for( uint16_t i = 0; i < data.size(); i++ ) {
+
         outfile << data[ i ];
 
     }
@@ -115,6 +119,7 @@ void RandomImpl::resetPackSpace() {
     // srand( time( NULL ) );
 
     this->spaceInPack = k_in_data + 1 + ( 1 + rand() % ( prot.N - ( headerSize + k_in_data + 1 ) ) );
+    // if Aligned then resetPackSpace( prot.N - this->k_in_1stHead )
 }
 
 void RandomImpl::setkOfSym( uint16_t newK  ) {
@@ -139,13 +144,32 @@ void RandomImpl::addInfo( std::string& str ) {
     }
 }
 
-void RandomImpl::printHeadInfo() {
+void RandomImpl::printHeadInfo() { // and add to data
 
-    std::string header1 = std::to_string( currpackNum );
-    while( header1.size() != k_in_1stHead ) {
-        header1 = "0" + header1;
+    if( prot.type == ProtocolType::Standart ) {
+
+        std::string header1 = std::to_string( currpackNum );
+        while( header1.size() != k_in_1stHead ) {
+            header1 = "0" + header1;
+        }
+        data = header1 + data;
+        // outfile << header1; // << "\t";
     }
-    outfile << header1; // << "\t";
+    if( prot.type == ProtocolType::Magic ) {
+
+        std::string header = std::to_string( keyword );
+        std::string header1 = std::to_string( currpackNum );
+        while( header1.size() != k_in_1stHead ) {
+            header1 = "0" + header1;
+        }
+        std::string header2 = std::to_string( kOfSym );
+        while( header2.size() != k_in_2ndHead ) {
+            header2 = "0" + header2;
+        }
+        data = header + header1 + header2 + data;
+        // outfile << header << header1 << header2;
+    }
+
 
 }
 

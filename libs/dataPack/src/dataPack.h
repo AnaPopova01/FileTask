@@ -11,10 +11,10 @@ class AlignedImpl: public BaseImpl {
 
 public:
 
-    // using BaseImpl::BaseImpl;
-// void writeToFile() {
-// std::cerr << "wtf from Aligned" << std::endl;
-// }
+    using BaseImpl::BaseImpl;
+    void writeToFile() {
+        std::cerr << "wtf from Aligned" << std::endl;
+    }
     virtual void writeToFile( const string& inputfile, const string& outputfile, Protocol& protocol ) override final;
 
 
