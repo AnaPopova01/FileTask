@@ -35,12 +35,13 @@ void AlignedImpl::writeToFile( const string& inputfile, const string& outputfile
                 addInfo( str ); // добавляем служебную информацию
                 formPack( str ); // write to file
             }
+            printvecdata();
 
             outfile.close(); // close file
         }
 
     }
-    // printvecdata();
+
 }
 
 void AlignedImpl::formPack( std::string& str ) {
@@ -98,16 +99,29 @@ void AlignedImpl::nextPacket() {
 
 void AlignedImpl::printPack() { // also add pack to common vector
 
-    if( this->currpackNum != 0 ) {
-        outfile << "\n";
-    }
-    ;
+// if( this->currpackNum != 0 ) {
+// outfile << "\n";
+// }
+// ;
     printHeadInfo();
     vecdata.push_back( data );
-    for( uint16_t i = 0; i < data.size(); i++ ) {
-        outfile << data[ i ];
+// for( uint16_t i = 0; i < data.size(); i++ ) {
+// outfile << data[ i ];
+
+// }
+}
+
+void AlignedImpl::printString( std::string& str ) {
+
+    for( uint16_t i = 0; i < str.size(); i++ ) {
+        outfile << str[ i ];
 
     }
+
+// for( uint16_t i = 0; i < str.size(); i++ ) {
+// std::cerr << str[ i ];
+
+// }
 }
 
 void AlignedImpl::printvecdata() {
@@ -120,18 +134,27 @@ void AlignedImpl::printvecdata() {
             if( vecdata.size() != 1 ) {
                 auto index { vecdata.begin() };
                 x = { rand() % ( vecdata.size() - 1 ) };
-                outfile << vecdata[ i ] << "\n";
+
+                printString( vecdata[ x ] );
+
+
+
                 vecdata.erase( index + x );
             } else {
-                outfile << vecdata[ 0 ];
+
+                printString( vecdata[ 0 ] );
+
             }
         } else {
-            outfile << vecdata[ i ];
-            if( i != size - 1 ) {
-                outfile << "\n";
-            }
-        }
 
+            printString( vecdata[ i ] );
+
+
+
+        }
+        if( i != size - 1 ) {
+            outfile << "\n";
+        }
     }
 }
 

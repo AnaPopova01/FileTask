@@ -21,7 +21,7 @@ struct Protocol {
 
 class IPacker {
 public:
-
+    virtual void writeToFile() = 0;
     virtual void writeToFile( const string& inputfile, const string& outputfile, Protocol& prot ) = 0;
     virtual void getKey() = 0;
 
@@ -34,7 +34,7 @@ class BaseImpl: public IPacker {
 public:
 
 
-    void writeToFile() {
+    void writeToFile()override {
         std::cerr << "cringe from Base" << std::endl;
     }
     virtual void writeToFile( const string& inputfile, const string& outputfile, Protocol& prot ) = 0;

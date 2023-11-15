@@ -32,6 +32,7 @@ private:
     void printPack(); //
     void setkOfSym( uint16_t newK  );
     void printvecdata();
+    void printString( std::string& str );
 
 
 };

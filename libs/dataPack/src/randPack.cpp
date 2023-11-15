@@ -29,6 +29,7 @@ void RandomImpl::writeToFile( const string& inputfile, const string& outputfile,
                 formPack( str ); // write to file
 
             }
+            printvecdata();
 
             outfile.close(); // close file
         }
@@ -36,10 +37,6 @@ void RandomImpl::writeToFile( const string& inputfile, const string& outputfile,
     }
 }
 
-void RandomImpl::getString() {
-
-
-}
 
 void RandomImpl::formPack( std::string& str ) {
 
@@ -91,19 +88,17 @@ void RandomImpl::nextPacket() {
     this->currpackNum++;
     // newPackFlag = true;
     resetPackSpace();
-    if( this->currpackNum == 184 ) {
-        std::cerr << "stop";
-    }
+
     this->kOfSym = 0;
     this->data = "";
 }
 
 void RandomImpl::printPack() {
 
-    if( this->currpackNum != 0 ) {
-        outfile << "\n";
-    }
-    ;
+// if( this->currpackNum != 0 ) {
+// outfile << "\n";
+// }
+// ;
     if( prot.type == ProtocolType::Standart ) {
         while( data.size() < prot.N - k_in_1stHead ) {
             data = data + "&";
@@ -111,12 +106,55 @@ void RandomImpl::printPack() {
     }
     printHeadInfo();
     vecdata.push_back( data );
-    for( uint16_t i = 0; i < data.size(); i++ ) {
+// for( uint16_t i = 0; i < data.size(); i++ ) {
 
-        outfile << data[ i ];
+// outfile << data[ i ];
+
+// }
+}
+
+void RandomImpl::printString( std::string& str ) {
+
+    for( uint16_t i = 0; i < str.size(); i++ ) {
+        outfile << str[ i ];
 
     }
 }
+
+void RandomImpl::printvecdata() {
+    auto size = vecdata.size();
+    int x = 0;
+
+    for( int i = 0; i < size; i++ ) {
+
+        if( prot.mixPackets == 1 ) {
+            if( vecdata.size() != 1 ) {
+                auto index { vecdata.begin() };
+                x = { rand() % ( vecdata.size() - 1 ) };
+
+                printString( vecdata[ x ] );
+
+                // std::cerr << vecdata[ x ] << "\n";
+
+                vecdata.erase( index + x );
+            } else {
+
+                printString( vecdata[ 0 ] );
+                // std::cerr << vecdata[ 0 ];
+            }
+        } else {
+
+            printString( vecdata[ i ] );
+            // std::cerr << vecdata[ i ];
+
+
+        }
+        if( i != size - 1 ) {
+            outfile << "\n";
+        }
+    }
+}
+
 
 void RandomImpl::resetPackSpace( uint16_t newSpace   ) {
 
