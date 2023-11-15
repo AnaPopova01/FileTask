@@ -55,27 +55,27 @@ void RandomImpl::formPack( std::string& str ) {
             data = data + str[ i ];
         }
         str.erase( 0, kOfPacket * ( k_in_data + 1 ) );
-        if( prot.type == ProtocolType::Standart ) {
-            while( data.size() < prot.N - k_in_1stHead ) {
-                data = data + "&";
-            }
-        }
+
+
         printPack();
         nextPacket();
-        formPack( str );
+        if( str.size() != 0 ) {
+            formPack( str );
+        }
+        ;
 
-        // если не влезает то делим на две - одну пишем в файл, другой вызываем printPack
+        // если не влезает то делим на две - одну пишем в файл, другой вызываем formPack
 
     } else if( length < spaceInPack ) {
 
-        setkOfSym( length / this->k_in_data + 1 );
+        setkOfSym( length / ( this->k_in_data + 1 ) );
         data = data + str;
 
         resetPackSpace( spaceInPack - length );
 
     } else if( length == spaceInPack ) {// пишем в файл и (номер пакета) ++
 
-        setkOfSym( length / this->k_in_data + 1 );
+        setkOfSym( length / ( this->k_in_data + 1 ) );
         data = data + str;
 
         printPack();
@@ -91,6 +91,9 @@ void RandomImpl::nextPacket() {
     this->currpackNum++;
     // newPackFlag = true;
     resetPackSpace();
+    if( this->currpackNum == 184 ) {
+        std::cerr << "stop";
+    }
     this->kOfSym = 0;
     this->data = "";
 }
@@ -101,6 +104,11 @@ void RandomImpl::printPack() {
         outfile << "\n";
     }
     ;
+    if( prot.type == ProtocolType::Standart ) {
+        while( data.size() < prot.N - k_in_1stHead ) {
+            data = data + "&";
+        }
+    }
     printHeadInfo();
     vecdata.push_back( data );
     for( uint16_t i = 0; i < data.size(); i++ ) {
@@ -153,7 +161,7 @@ void RandomImpl::printHeadInfo() { // and add to data
             header1 = "0" + header1;
         }
         data = header1 + data;
-        // outfile << header1; // << "\t";
+        // outfile << header1 << "\t";
     }
     if( prot.type == ProtocolType::Magic ) {
 
@@ -167,7 +175,7 @@ void RandomImpl::printHeadInfo() { // and add to data
             header2 = "0" + header2;
         }
         data = header + header1 + header2 + data;
-        // outfile << header << header1 << header2;
+        // outfile << header << "\t" << header1 << "\t" << header2 << "\t";
     }
 
 
@@ -177,8 +185,6 @@ void RandomImpl::setProtocol( Protocol& protocol ) {
     this->prot = protocol;
     prot.type == ProtocolType::Standart ? headerSize = 4 : headerSize = 12;
     resetPackSpace();
-
-
 
 }
 

@@ -27,9 +27,11 @@ private:
     void printHeadInfo(); // заголовок печатается отдельно от данных
     void nextPacket();
     void resetPackSpace( uint16_t newSpace );
+    void resetPackSpace();
     void setProtocol( Protocol& protocol );
     void printPack(); //
     void setkOfSym( uint16_t newK  );
+    void printvecdata();
 
 
 };

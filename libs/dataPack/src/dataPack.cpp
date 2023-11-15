@@ -8,7 +8,7 @@ void AlignedImpl::writeToFile( const string& inputfile, const string& outputfile
     setProtocol( protocol );
 
 
-    this->spaceInPack = 0;// resetPackSpace( prot.N - this->k_in_1stHead ); // - this->k_in_2ndHead;
+
     std::ifstream originFile( inputfile ); // open file with origin data
 
     if( !originFile.is_open() ) {
@@ -40,6 +40,7 @@ void AlignedImpl::writeToFile( const string& inputfile, const string& outputfile
         }
 
     }
+    // printvecdata();
 }
 
 void AlignedImpl::formPack( std::string& str ) {
@@ -56,7 +57,7 @@ void AlignedImpl::formPack( std::string& str ) {
             data = data + str[ i ];
         }
         str.erase( 0, kOfPacket * ( k_in_data + 1 ) );
-        while( data.size() < prot.N - k_in_1stHead ) {
+        while( data.size() < ( maxSpace ) ) {
             data = data + "&";
         }
         printPack();
@@ -67,14 +68,15 @@ void AlignedImpl::formPack( std::string& str ) {
 
     } else if( length < spaceInPack ) {
 
-        setkOfSym( length / this->k_in_data + 1 );
+
+        setkOfSym( length / ( this->k_in_data + 1 ) );
         data = data + str;
         // newPackFlag = false; // useless
         resetPackSpace( spaceInPack - length );
 
     } else if( length == spaceInPack ) {// пишем в файл и (номер пакета) ++
 
-        setkOfSym( length / this->k_in_data + 1 );
+        setkOfSym( length / ( this->k_in_data + 1 ) );
         data = data + str;
 
         printPack();
@@ -89,27 +91,61 @@ void AlignedImpl::nextPacket() {
 
     this->currpackNum++;
     // newPackFlag = true;
-    this->spaceInPack = prot.N - k_in_1stHead;// - k_in_2ndHead;
+    resetPackSpace();// - k_in_2ndHead;
     this->kOfSym = 0;
     this->data = "";
 }
 
-void AlignedImpl::printPack() {
+void AlignedImpl::printPack() { // also add pack to common vector
 
     if( this->currpackNum != 0 ) {
         outfile << "\n";
     }
     ;
     printHeadInfo();
+    vecdata.push_back( data );
     for( uint16_t i = 0; i < data.size(); i++ ) {
         outfile << data[ i ];
 
     }
 }
 
+void AlignedImpl::printvecdata() {
+    auto size = vecdata.size();
+    int x = 0;
+
+    for( int i = 0; i < size; i++ ) {
+
+        if( prot.mixPackets == 1 ) {
+            if( vecdata.size() != 1 ) {
+                auto index { vecdata.begin() };
+                x = { rand() % ( vecdata.size() - 1 ) };
+                outfile << vecdata[ i ] << "\n";
+                vecdata.erase( index + x );
+            } else {
+                outfile << vecdata[ 0 ];
+            }
+        } else {
+            outfile << vecdata[ i ];
+            if( i != size - 1 ) {
+                outfile << "\n";
+            }
+        }
+
+    }
+}
+
+
 void AlignedImpl::resetPackSpace( uint16_t newSpace  ) {
 
     this->spaceInPack = newSpace;
+}
+
+void AlignedImpl::resetPackSpace() {
+
+
+    this->spaceInPack = maxSpace;
+
 }
 
 void AlignedImpl::setkOfSym( uint16_t newK  ) {
@@ -136,15 +172,46 @@ void AlignedImpl::addInfo( std::string& str ) {
 
 void AlignedImpl::printHeadInfo() {
 
-    std::string header1 = std::to_string( currpackNum );
-    while( header1.size() != k_in_1stHead ) {
-        header1 = "0" + header1;
+    if( prot.type == ProtocolType::Standart ) {
+
+        std::string header1 = std::to_string( currpackNum );
+        while( header1.size() != k_in_1stHead ) {
+            header1 = "0" + header1;
+        }
+        data = header1 + data;
+        // outfile << header1 << "\t";
     }
-    outfile << header1; // << "\t";
+    if( prot.type == ProtocolType::Magic ) {
+
+        std::string header = std::to_string( keyword );
+        std::string header1 = std::to_string( currpackNum );
+        while( header1.size() != k_in_1stHead ) {
+            header1 = "0" + header1;
+        }
+        std::string header2 = std::to_string( kOfSym );
+        while( header2.size() != k_in_2ndHead ) {
+            header2 = "0" + header2;
+        }
+        data = header + header1 + header2 + data;
+        // outfile << header << "\t" << header1 << "\t" << header2 << "\t";
+    }
 
 }
 
 void AlignedImpl::setProtocol( Protocol& protocol ) {
     this->prot = protocol;
+    if( prot.type == ProtocolType::Standart ) {
+
+        headerSize = this->k_in_1stHead;
+
+    }
+    if( prot.type == ProtocolType::Magic ) {
+
+        headerSize = k_in_1stHead + k_in_2ndHead + ( std::to_string( keyword ) ).size();
+
+    }
+    this->maxSpace = prot.N - headerSize;
+
+    resetPackSpace();
 }
 
