@@ -45,7 +45,7 @@ public:
 protected:
 
 
-
+    int amountOfSym = 0;
 
     Protocol prot { ProtocolType::Standart,  50, 0 };
 
@@ -57,7 +57,7 @@ protected:
     unsigned int keyword = 0xDED;
 
     std::ofstream outfile; // path to file for writing data
-    std::ofstream infile;
+    std::ifstream infile;
     // uint16_t N; // max length of packet
 
     // текущие значения служебных полей

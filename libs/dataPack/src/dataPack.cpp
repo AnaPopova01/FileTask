@@ -1,13 +1,8 @@
 #include "dataPack.h"
 
-#include <iostream>
-
-
 void AlignedImpl::writeToFile( const string& inputfile, const string& outputfile, Protocol& protocol ) {
 
     setProtocol( protocol );
-
-
 
     std::ifstream originFile( inputfile ); // open file with origin data
 
@@ -28,16 +23,16 @@ void AlignedImpl::writeToFile( const string& inputfile, const string& outputfile
 
             while( !originFile.eof() ) { // until file finish
 
-
-                // createPacket();
-                // printPacket();
                 std::getline( originFile, str ); // read string
+                // amountOfSym += str.size();
                 addInfo( str ); // добавляем служебную информацию
                 formPack( str ); // write to file
             }
+            printPack();
             printvecdata();
 
             outfile.close(); // close file
+            // std::cerr << "amountOfSym = " << amountOfSym << "\n";
         }
 
     }
@@ -58,12 +53,11 @@ void AlignedImpl::formPack( std::string& str ) {
             data = data + str[ i ];
         }
         str.erase( 0, kOfPacket * ( k_in_data + 1 ) );
-        while( data.size() < ( maxSpace ) ) {
-            data = data + "&";
-        }
         printPack();
         nextPacket();
-        formPack( str );
+        if( str.size() != 0 ) {
+            formPack( str );
+        }
 
         // если не влезает то делим на две - одну пишем в файл, другой вызываем printPack
 
@@ -72,7 +66,6 @@ void AlignedImpl::formPack( std::string& str ) {
 
         setkOfSym( length / ( this->k_in_data + 1 ) );
         data = data + str;
-        // newPackFlag = false; // useless
         resetPackSpace( spaceInPack - length );
 
     } else if( length == spaceInPack ) {// пишем в файл и (номер пакета) ++
@@ -91,8 +84,7 @@ void AlignedImpl::formPack( std::string& str ) {
 void AlignedImpl::nextPacket() {
 
     this->currpackNum++;
-    // newPackFlag = true;
-    resetPackSpace();// - k_in_2ndHead;
+    resetPackSpace();
     this->kOfSym = 0;
     this->data = "";
 }
@@ -103,6 +95,12 @@ void AlignedImpl::printPack() { // also add pack to common vector
 // outfile << "\n";
 // }
 // ;
+
+    if( prot.type == ProtocolType::Standart ) {
+        while( data.size() < maxSpace ) {
+            data = data + "&";
+        }
+    }
     printHeadInfo();
     vecdata.push_back( data );
 // for( uint16_t i = 0; i < data.size(); i++ ) {
@@ -117,18 +115,13 @@ void AlignedImpl::printString( std::string& str ) {
         outfile << str[ i ];
 
     }
-
-// for( uint16_t i = 0; i < str.size(); i++ ) {
-// std::cerr << str[ i ];
-
-// }
 }
 
 void AlignedImpl::printvecdata() {
     auto size = vecdata.size();
     int x = 0;
 
-    for( int i = 0; i < size; i++ ) {
+    for( uint16_t i = 0; i < size; i++ ) {
 
         if( prot.mixPackets == 1 ) {
             if( vecdata.size() != 1 ) {

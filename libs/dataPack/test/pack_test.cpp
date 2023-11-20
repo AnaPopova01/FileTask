@@ -14,12 +14,13 @@ TEST( PackerTests, creating ) {
 TEST( PackerTests, AlignedtWriteStd ) {
 
     auto tatus = createPackerImpl( PackerType::Aligned );
-    Protocol prot { ProtocolType::Standart,  50, 1 };
+    Protocol prot { ProtocolType::Standart,  50, 0 };
 
-    const string inputfile = "/home/ann/WORK/work_qt/StringCoder/FilesAndStrings/bin/originCodeforReader.txt";
-    const string outputfile = "/home/ann/WORK/work_qt/StringCoder/FilesAndStrings/bin/to_read/aligned_Std_MIX.txt";
+    const string inputfile = "/home/ann/WORK/work_qt/StringCoder/FilesAndStrings/bin/originCode2.txt";
+    const string outputfile = "/home/ann/WORK/work_qt/StringCoder/FilesAndStrings/bin/no_mix/aligned_Std.txt";
     tatus->writeToFile( inputfile, outputfile, prot );
 
+    int kOfLines = 0;
     std::ifstream originFile( outputfile ); // open file with origin strings
 
     if( !originFile.is_open() ) {
@@ -34,12 +35,12 @@ TEST( PackerTests, AlignedtWriteStd ) {
         while( !originFile.eof() ) {
 
             std::getline( originFile, str );
-
+            kOfLines++;
             auto siz = str.size();
             ASSERT_EQ( siz, 50 );
 
         }
-
+        ASSERT_EQ( kOfLines, 109 );
     }
 
 
@@ -55,6 +56,7 @@ TEST( PackerTests, AlignedtWriteMagic ) {
     const string outputfile = "/home/ann/WORK/work_qt/StringCoder/FilesAndStrings/bin/no_mix/aligned_Mag.txt";
     tatus->writeToFile( inputfile, outputfile, prot );
 
+    int kOfLines = 0;
     std::ifstream originFile( outputfile ); // open file with origin strings
 
     if( !originFile.is_open() ) {
@@ -69,13 +71,14 @@ TEST( PackerTests, AlignedtWriteMagic ) {
         while( !originFile.eof() ) {
 
             std::getline( originFile, str );
-
+            kOfLines++;
             auto siz = str.size();
-            ASSERT_EQ( siz, 50 );
+            ASSERT_LE( siz, 50 );
 
         }
-
+        ASSERT_EQ( kOfLines, 133 );
     }
+
 
 
 }
@@ -156,7 +159,7 @@ TEST( PackerTests, AlignedtWriteStd_MIX ) {
     const string inputfile = "/home/ann/WORK/work_qt/StringCoder/FilesAndStrings/bin/originCode2.txt";
     const string outputfile = "/home/ann/WORK/work_qt/StringCoder/FilesAndStrings/bin/mix/aligned_Std_MIX.txt";
     tatus->writeToFile( inputfile, outputfile, prot );
-
+    int kOfLines = 0;
     std::ifstream originFile( outputfile ); // open file with origin strings
 
     if( !originFile.is_open() ) {
@@ -171,12 +174,12 @@ TEST( PackerTests, AlignedtWriteStd_MIX ) {
         while( !originFile.eof() ) {
 
             std::getline( originFile, str );
-
+            kOfLines++;
             auto siz = str.size();
             ASSERT_EQ( siz, 50 );
 
         }
-
+        ASSERT_EQ( kOfLines, 109 );
     }
 
 
@@ -192,6 +195,7 @@ TEST( PackerTests, AlignedtWriteMag_MIX ) {
     const string outputfile = "/home/ann/WORK/work_qt/StringCoder/FilesAndStrings/bin/mix/aligned_Mag_MIX.txt";
     tatus->writeToFile( inputfile, outputfile, prot );
 
+    int kOfLines = 0;
     std::ifstream originFile( outputfile ); // open file with origin strings
 
     if( !originFile.is_open() ) {
@@ -206,12 +210,12 @@ TEST( PackerTests, AlignedtWriteMag_MIX ) {
         while( !originFile.eof() ) {
 
             std::getline( originFile, str );
-
+            kOfLines++;
             auto siz = str.size();
-            ASSERT_EQ( siz, 50 );
+            ASSERT_LE( siz, 50 );
 
         }
-
+        ASSERT_EQ( kOfLines, 133 );
     }
 
 

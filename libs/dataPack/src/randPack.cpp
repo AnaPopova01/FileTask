@@ -29,6 +29,7 @@ void RandomImpl::writeToFile( const string& inputfile, const string& outputfile,
                 formPack( str ); // write to file
 
             }
+            printPack();
             printvecdata();
 
             outfile.close(); // close file
@@ -53,13 +54,12 @@ void RandomImpl::formPack( std::string& str ) {
         }
         str.erase( 0, kOfPacket * ( k_in_data + 1 ) );
 
-
         printPack();
         nextPacket();
         if( str.size() != 0 ) {
             formPack( str );
         }
-        ;
+
 
         // если не влезает то делим на две - одну пишем в файл, другой вызываем formPack
 
@@ -67,14 +67,17 @@ void RandomImpl::formPack( std::string& str ) {
 
         setkOfSym( length / ( this->k_in_data + 1 ) );
         data = data + str;
-
         resetPackSpace( spaceInPack - length );
 
     } else if( length == spaceInPack ) {// пишем в файл и (номер пакета) ++
 
         setkOfSym( length / ( this->k_in_data + 1 ) );
         data = data + str;
-
+        if( prot.type == ProtocolType::Standart ) {
+            while( data.size() < maxSpace ) {
+                data = data + "&";
+            }
+        }
         printPack();
         nextPacket();
 
@@ -86,21 +89,20 @@ void RandomImpl::formPack( std::string& str ) {
 void RandomImpl::nextPacket() {
 
     this->currpackNum++;
-    // newPackFlag = true;
     resetPackSpace();
-
     this->kOfSym = 0;
     this->data = "";
 }
 
 void RandomImpl::printPack() {
 
-// if( this->currpackNum != 0 ) {
-// outfile << "\n";
+// if( this->currpackNum == 146 ) {
+//// outfile << "\n";
+// std::cerr << "stop";
 // }
 // ;
     if( prot.type == ProtocolType::Standart ) {
-        while( data.size() < prot.N - k_in_1stHead ) {
+        while( data.size() < maxSpace ) {
             data = data + "&";
         }
     }
@@ -125,17 +127,14 @@ void RandomImpl::printvecdata() {
     auto size = vecdata.size();
     int x = 0;
 
-    for( int i = 0; i < size; i++ ) {
+    for( uint16_t i = 0; i < size; i++ ) {
 
         if( prot.mixPackets == 1 ) {
             if( vecdata.size() != 1 ) {
                 auto index { vecdata.begin() };
                 x = { rand() % ( vecdata.size() - 1 ) };
-
                 printString( vecdata[ x ] );
-
                 // std::cerr << vecdata[ x ] << "\n";
-
                 vecdata.erase( index + x );
             } else {
 
@@ -220,8 +219,21 @@ void RandomImpl::printHeadInfo() { // and add to data
 }
 
 void RandomImpl::setProtocol( Protocol& protocol ) {
+
+
     this->prot = protocol;
-    prot.type == ProtocolType::Standart ? headerSize = 4 : headerSize = 12;
+    if( prot.type == ProtocolType::Standart ) {
+
+        headerSize = this->k_in_1stHead;
+
+    }
+    if( prot.type == ProtocolType::Magic ) {
+
+        headerSize = k_in_1stHead + k_in_2ndHead + ( std::to_string( keyword ) ).size();
+
+    }
+    this->maxSpace = prot.N - headerSize;
+
     resetPackSpace();
 
 }
