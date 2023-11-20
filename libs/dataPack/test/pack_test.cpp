@@ -14,10 +14,10 @@ TEST( PackerTests, creating ) {
 TEST( PackerTests, AlignedtWriteStd ) {
 
     auto tatus = createPackerImpl( PackerType::Aligned );
-    Protocol prot { ProtocolType::Standart,  50, 0 };
+    Protocol prot { ProtocolType::Standart,  50, 1 };
 
-    const string inputfile = "/home/ann/WORK/work_qt/StringCoder/FilesAndStrings/bin/originCode2.txt";
-    const string outputfile = "/home/ann/WORK/work_qt/StringCoder/FilesAndStrings/bin/no_mix/aligned_Std.txt";
+    const string inputfile = "/home/ann/WORK/work_qt/StringCoder/FilesAndStrings/bin/originCodeforReader.txt";
+    const string outputfile = "/home/ann/WORK/work_qt/StringCoder/FilesAndStrings/bin/to_read/aligned_Std_MIX.txt";
     tatus->writeToFile( inputfile, outputfile, prot );
 
     std::ifstream originFile( outputfile ); // open file with origin strings

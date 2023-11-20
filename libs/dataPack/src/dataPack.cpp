@@ -134,11 +134,7 @@ void AlignedImpl::printvecdata() {
             if( vecdata.size() != 1 ) {
                 auto index { vecdata.begin() };
                 x = { rand() % ( vecdata.size() - 1 ) };
-
                 printString( vecdata[ x ] );
-
-
-
                 vecdata.erase( index + x );
             } else {
 
@@ -148,8 +144,6 @@ void AlignedImpl::printvecdata() {
         } else {
 
             printString( vecdata[ i ] );
-
-
 
         }
         if( i != size - 1 ) {
