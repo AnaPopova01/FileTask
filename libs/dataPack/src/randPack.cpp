@@ -29,7 +29,9 @@ void RandomImpl::writeToFile( const string& inputfile, const string& outputfile,
                 formPack( str ); // write to file
 
             }
-            printPack();
+            if( data.size() != 0 ) {
+                printPack();
+            }
             printvecdata();
 
             outfile.close(); // close file

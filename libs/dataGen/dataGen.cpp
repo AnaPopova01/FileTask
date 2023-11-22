@@ -56,10 +56,11 @@ void DataGenerator::writeToFile( std::string& path ) {
     for( uint32_t numOfStr = 0; numOfStr < this->k; numOfStr++ ) {
 
         uint32_t l = 1 + rand() % ( rmax_len * N ); // set current length
-        // file << l;
 
         for( uint32_t length = 0; length < l; length++ ) {
+            // sym = makeSym();
             file << sym;
+            std::cerr << sym;
 
         }
         if( numOfStr != this->k - 1 ) {
@@ -68,6 +69,11 @@ void DataGenerator::writeToFile( std::string& path ) {
 
     }
 
-
 }
 
+char DataGenerator::makeSym() {
+
+    // srand( time( NULL ) );
+    char intsym = 33 + rand() % ( 93 );
+    return ( intsym );
+}

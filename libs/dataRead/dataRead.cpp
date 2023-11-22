@@ -41,7 +41,7 @@ void DataRead::readFromFile( const string& inputfile, const string& outputfile )
                 cleanData();
             }
             printData();
-
+            outfile << "\n";
             outfile.close(); // close file
         }
 
@@ -125,9 +125,9 @@ void DataRead::printPack() {
 
     for( uint16_t nline = 0; nline < strdata.size(); nline++ ) {
         int count = 0;
-        if( nline == 31 ) {
-            std::cerr << "stop";
-        }
+// if( nline == 31 ) {
+// std::cerr << "stop";
+// }
 
         while( strdata[ nline ].size() != 0 ) {
 
@@ -149,7 +149,7 @@ void DataRead::printPack() {
 
         }
 
-        cerr << nline << ") " << count << "\n";
+        // cerr << nline << ") " << count << "\n";
     }
 }
 

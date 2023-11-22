@@ -1,0 +1,3 @@
+package_length=50
+symbol=#
+quantity_of_strings=50

@@ -33,7 +33,7 @@ private:
     uint32_t k = 100; // количество строк
     uint16_t rmax_len =  1;// коэффициент для установки максимальной длины строки
     void getSett( std::ifstream& configFile, char pole ); // чтение настроек из взятой из файла строки
-
+    char makeSym();
 };
 
 

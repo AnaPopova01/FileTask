@@ -285,3 +285,26 @@ TEST( PackerTests, RandomtWriteMagic_MIX ) {
 
     }
 }
+
+TEST( PackerTests, RandomsstWriteMagic_MIX ) {
+
+    std::vector nums = { 5, 34, 2, 4, 60, 8, 3, 209, 599 };
+
+    std::set< decltype( nums )::value_type > sorted( nums.begin(), nums.end() );
+
+
+
+
+    for( auto vVal : nums ) {
+        std::cerr << vVal << ", ";
+    }
+    std::cerr <<  "\n ";
+
+    for( auto sval : sorted ) {
+        std::cerr << sval << ", ";
+    }
+    std::cerr <<  "\n ";
+
+
+
+}

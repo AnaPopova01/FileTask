@@ -4,7 +4,7 @@ void AlignedImpl::writeToFile( const string& inputfile, const string& outputfile
 
     setProtocol( protocol );
 
-    std::ifstream originFile( inputfile ); // open file with origin data
+    std::ifstream originFile( inputfile, std::ios::binary ); // open file with origin data
 
     if( !originFile.is_open() ) {
 
@@ -12,7 +12,7 @@ void AlignedImpl::writeToFile( const string& inputfile, const string& outputfile
 
     } else {
 
-        this->outfile.open( outputfile ); // open file to write
+        this->outfile.open( outputfile, std::ios::binary ); // open file to write
         if( !outfile.is_open() ) {
 
             throw std::runtime_error( "cant open file " );
@@ -28,7 +28,9 @@ void AlignedImpl::writeToFile( const string& inputfile, const string& outputfile
                 addInfo( str ); // добавляем служебную информацию
                 formPack( str ); // write to file
             }
-            printPack();
+            if( data.size() != 0 ) {
+                printPack();
+            }
             printvecdata();
 
             outfile.close(); // close file

@@ -11,10 +11,19 @@
 
 int main() {
 
-    auto tatus = createPackerImpl( PackerType::Random );
-    Protocol prot { ProtocolType::Magic,  50, 0 };
+// DataGenerator obj;
 
-    const string inputfile = "/home/ann/WORK/work_qt/StringCoder/FilesAndStrings/bin/from_read/originCodeforReader.txt";
-    const string outputfile = "/home/ann/WORK/work_qt/StringCoder/FilesAndStrings/bin/to_read/random_Mag.txt";
+// std::string confpath = "/home/ann/WORK/work_qt/StringCoder/FilesAndStrings/bin/config.txt";
+// obj.readConfig( confpath );
+
+// std::string outputPath = "/home/ann/WORK/work_qt/StringCoder/FilesAndStrings/bin/randOrigCode.txt";
+// obj.writeToFile( outputPath );
+
+
+    auto tatus = createPackerImpl( PackerType::Aligned );
+    Protocol prot { ProtocolType::Standart,  50, 0 };
+
+    const string inputfile = "/home/ann/WORK/work_qt/StringCoder/FilesAndStrings/bin/randOrigCode.txt";
+    const string outputfile = "/home/ann/WORK/work_qt/StringCoder/FilesAndStrings/bin/reader/cursedaligned_Std.txt";
     tatus->writeToFile( inputfile, outputfile, prot );
 }
