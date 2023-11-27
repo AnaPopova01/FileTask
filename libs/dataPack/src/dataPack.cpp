@@ -19,65 +19,74 @@ void AlignedImpl::writeToFile( const string& inputfile, const string& outputfile
 
         } else {
 
-            std::string str; // string for data
+            char value;
+            int count = 0;
 
-            while( !originFile.eof() ) { // until file finish
+            while( !originFile.eof() ) {
 
-                std::getline( originFile, str ); // read string
-                // amountOfSym += str.size();
-                addInfo( str ); // добавляем служебную информацию
-                formPack( str ); // write to file
+                originFile.read( ( char* )&value, sizeof( char ) );
+                count++;
+                // std::cerr << count << ") val = " << value << "\n"; // это пробел
+                data += value;
+
+
             }
-            if( data.size() != 0 ) {
-                printPack();
+            data.erase( data.size() - 1, 1 );
+            std::cerr << "amount sym in origdata = " << count - 1 << "\n";
+            std::cerr << "the last = " << value << "\n"; // это пробел
+
+
+            if( prot.type == ProtocolType::Standart ) {
+
+                addInfo();// добавляем служебную информацию
             }
+
+// float amount_of_packs = ( prot.N - headerSize ) / ( k_in_data + 1 );
+// std::cerr << "amount of string = " <<  ceil( data.size() / ( k_in_data + 1 ) / amount_of_packs ) << std::endl;
+
+            formPack();
             printvecdata();
-
-            outfile.close(); // close file
-            // std::cerr << "amountOfSym = " << amountOfSym << "\n";
+            outfile.close();
         }
 
     }
 
 }
 
-void AlignedImpl::formPack( std::string& str ) {
+void AlignedImpl::formPack() {
 
-    uint16_t length = str.size();
+    uint16_t length = data.size();
+    std::string str;
 
-
-    if( length > spaceInPack ) { // проверка влезет ли строка в пакет
+    if( length > spaceInPack ) {
 
 
         uint16_t kOfPacket = ( spaceInPack / ( k_in_data + 1 ) ); // какое количество пакетов можно добавить в текущую строку
         setkOfSym( kOfPacket );
         for( uint16_t i = 0; i < kOfPacket * ( k_in_data + 1 ); i++ ) {
-            data = data + str[ i ];
+            str = str + data[ i ];
         }
-        str.erase( 0, kOfPacket * ( k_in_data + 1 ) );
-        printPack();
+        data.erase( 0, kOfPacket * ( k_in_data + 1 ) );
+        finishPack( str );
         nextPacket();
-        if( str.size() != 0 ) {
-            formPack( str );
+        if( data.size() != 0 ) {
+            formPack();
         }
-
-        // если не влезает то делим на две - одну пишем в файл, другой вызываем printPack
 
     } else if( length < spaceInPack ) {
 
 
         setkOfSym( length / ( this->k_in_data + 1 ) );
-        data = data + str;
+        str = data + str;
         resetPackSpace( spaceInPack - length );
+        finishPack( str );
 
-    } else if( length == spaceInPack ) {// пишем в файл и (номер пакета) ++
-
+    } else if( length == spaceInPack ) {
         setkOfSym( length / ( this->k_in_data + 1 ) );
-        data = data + str;
+        str = data + str;
 
-        printPack();
-        nextPacket();
-
+        finishPack( str );
+        // nextPacket();
 
     }
 
@@ -88,34 +97,24 @@ void AlignedImpl::nextPacket() {
     this->currpackNum++;
     resetPackSpace();
     this->kOfSym = 0;
-    this->data = "";
+
 }
 
-void AlignedImpl::printPack() { // also add pack to common vector
-
-// if( this->currpackNum != 0 ) {
-// outfile << "\n";
-// }
-// ;
+void AlignedImpl::finishPack( std::string& str ) { // also add pack to common vector
 
     if( prot.type == ProtocolType::Standart ) {
-        while( data.size() < maxSpace ) {
-            data = data + "&";
+        while( str.size() < maxSpace ) {
+            str = str + "&";
         }
     }
-    printHeadInfo();
-    vecdata.push_back( data );
-// for( uint16_t i = 0; i < data.size(); i++ ) {
-// outfile << data[ i ];
-
-// }
+    addHeadInfo( str );
+    vecdata.push_back( str );
 }
 
 void AlignedImpl::printString( std::string& str ) {
 
     for( uint16_t i = 0; i < str.size(); i++ ) {
-        outfile << str[ i ];
-
+        outfile.write( ( char* )( &str[ i ] ), sizeof( char ) );
     }
 }
 
@@ -139,11 +138,12 @@ void AlignedImpl::printvecdata() {
         } else {
 
             printString( vecdata[ i ] );
+            // outfile << "\n";
 
         }
-        if( i != size - 1 ) {
-            outfile << "\n";
-        }
+// if( i != size - 1 ) {
+        // outfile << "\n";
+// }
     }
 }
 
@@ -167,22 +167,22 @@ void AlignedImpl::setkOfSym( uint16_t newK  ) {
 
 
 
-void AlignedImpl::addInfo( std::string& str ) {
+void AlignedImpl::addInfo() {
 
     std::string payloadheader;
-    uint16_t endOfStr = str.size();
+    uint16_t endOfStr = data.size();
 
     for( uint16_t i = 0; i < endOfStr; i++ ) {
 
         payloadheader = std::to_string( i );
-        while( payloadheader.size() != this->k_in_data ) {
+        while( payloadheader.size() < this->k_in_data ) {
             payloadheader = "0" + payloadheader;
         }
-        str.insert( i * ( k_in_data + 1 ), payloadheader );
+        data.insert( i * ( k_in_data + 1 ), payloadheader );
     }
 }
 
-void AlignedImpl::printHeadInfo() {
+void AlignedImpl::addHeadInfo( std::string& str ) {
 
     if( prot.type == ProtocolType::Standart ) {
 
@@ -190,7 +190,7 @@ void AlignedImpl::printHeadInfo() {
         while( header1.size() != k_in_1stHead ) {
             header1 = "0" + header1;
         }
-        data = header1 + data;
+        str = header1 + str;
         // outfile << header1 << "\t";
     }
     if( prot.type == ProtocolType::Magic ) {
@@ -204,7 +204,7 @@ void AlignedImpl::printHeadInfo() {
         while( header2.size() != k_in_2ndHead ) {
             header2 = "0" + header2;
         }
-        data = header + header1 + header2 + data;
+        str = header + header1 + header2 + str;
         // outfile << header << "\t" << header1 << "\t" << header2 << "\t";
     }
 
@@ -220,6 +220,7 @@ void AlignedImpl::setProtocol( Protocol& protocol ) {
     if( prot.type == ProtocolType::Magic ) {
 
         headerSize = k_in_1stHead + k_in_2ndHead + ( std::to_string( keyword ) ).size();
+        k_in_data = 0;
 
     }
     this->maxSpace = prot.N - headerSize;

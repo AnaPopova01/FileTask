@@ -53,7 +53,7 @@ protected:
     uint8_t headerSize = 0;
     uint8_t k_in_1stHead = 4; // кол-во символов для кодирования порядкового номера пакета
     uint8_t k_in_2ndHead = 4; // кол-во символов для кодирования длины пакета
-    uint8_t k_in_data = 3; // кол-во символов для кодирования порядкового номера символа в строке
+    uint8_t k_in_data = 4; // кол-во символов для кодирования порядкового номера символа в строке
     unsigned int keyword = 0xDED;
 
     std::ofstream outfile; // path to file for writing data

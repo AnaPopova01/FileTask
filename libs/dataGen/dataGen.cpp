@@ -49,24 +49,28 @@ void DataGenerator::getSett( std::ifstream& configFile, char pole ) {
 
 void DataGenerator::writeToFile( std::string& path ) {
 
-    srand( time( NULL ) );
+    // srand( time( NULL ) );
 
     std::ofstream file( path );
 
     for( uint32_t numOfStr = 0; numOfStr < this->k; numOfStr++ ) {
 
-        uint32_t l = 1 + rand() % ( rmax_len * N ); // set current length
+        uint32_t l = 1 + rand() % ( rmax_len * N ); // set current length of line
 
         for( uint32_t length = 0; length < l; length++ ) {
-            // sym = makeSym();
+            sym = makeSym(); // make random symbol
             file << sym;
-            std::cerr << sym;
+            // std::cerr << sym;
 
         }
-        if( numOfStr != this->k - 1 ) {
-            file << "\n";
-        }
+// if( numOfStr != this->k - 1 ) {
+// file << "\n";
 
+// }
+        if( numOfStr == this->k - 1 ) {
+            file << "%";
+
+        }
     }
 
 }
@@ -75,5 +79,8 @@ char DataGenerator::makeSym() {
 
     // srand( time( NULL ) );
     char intsym = 33 + rand() % ( 93 );
+    if( intsym == '&' ) {
+        intsym = makeSym();
+    }
     return ( intsym );
 }

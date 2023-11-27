@@ -17,12 +17,12 @@ TEST( GeneratorTests, openAndConfig ) {
         // std::cerr << e.what() << std::endl;
 
     }
-    std::string path = "dat/test_config.txt";
+    std::string path = "generator/test_config.txt";
 
     obj.readConfig( path );
-    ASSERT_EQ( 10, obj.getN() );
+    ASSERT_EQ( 50, obj.getN() );
     ASSERT_EQ( '#', obj.getSym() );
-    ASSERT_EQ( 20, obj.getK() );
+    ASSERT_EQ( 100, obj.getK() );
 
 }
 
@@ -30,10 +30,10 @@ TEST( GeneratorTests, writeToFile ) {
 
     DataGenerator obj;
 
-    std::string confpath = "dat/test_config.txt";
+    std::string confpath = "generator/test_config.txt";
     obj.readConfig( confpath );
 
-    std::string outputPath = "dat/test_gen_data.txt";
+    std::string outputPath = "generator/test_gen_data.txt";
     obj.writeToFile( outputPath );
 
     std::ifstream originFile( outputPath ); // open file with origin strings
@@ -44,17 +44,17 @@ TEST( GeneratorTests, writeToFile ) {
 
     } else {
 
-        uint32_t counter = 0;
         std::string str;
 
         while( !originFile.eof() ) {
 
             std::getline( originFile, str );
-            counter++;
-            ASSERT_LE( str.size(), obj.getMaxLen() );
+
 
         }
-        ASSERT_EQ( counter, obj.getK() );
+        ASSERT_LE( str.size(), obj.getMaxLen() * obj.getK() );
+        ASSERT_EQ( str.find( '&' ), std::string::npos );
+
 
     }
 

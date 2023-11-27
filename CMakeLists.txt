@@ -29,5 +29,7 @@ target_link_libraries(${PROJECT_NAME} GenData)
 
 target_link_libraries(${PROJECT_NAME} PackData)
 
+target_link_libraries(${PROJECT_NAME} ReadData)
+
 install(TARGETS FilesAndStrings
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
