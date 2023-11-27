@@ -154,7 +154,6 @@ TEST( PackerTests, Aligned_Mag_MIX ) {
 
 }
 
-
 TEST( PackerTests, Random_Std ) {
 
     auto tatus = createPackerImpl( PackerType::Random );
@@ -164,29 +163,131 @@ TEST( PackerTests, Random_Std ) {
     const string outputfile = "packer/random/Std.txt";
     tatus->writeToFile( inputfile, outputfile, prot );
 
-    std::ifstream originFile( outputfile ); // open file with origin strings
+    std::ifstream fromPacker( outputfile, std::ios::binary );
 
-    if( !originFile.is_open() ) {
+    if( !fromPacker.is_open() ) {
 
         throw std::runtime_error( "cant open file " );
 
     } else {
 
+        char value;
+        int count = 0;
 
-        std::string str;
+        while( !fromPacker.eof() ) {
 
-        while( !originFile.eof() ) {
-
-            std::getline( originFile, str );
-
-            auto siz = str.size();
-            ASSERT_EQ( siz, 50 );
-            // ASSERT_GT( siz, 50 );
+            fromPacker.read( ( char* )&value, sizeof( char ) );
+            count++;
 
         }
 
+        ASSERT_GT( count - 1, 1211 );
     }
 }
+
+TEST( PackerTests, Random_Magic ) {
+
+    auto tatus = createPackerImpl( PackerType::Random );
+    Protocol prot { ProtocolType::Magic,  50, 0 };
+
+    const string inputfile = "packer/randsym.txt";
+    const string outputfile = "packer/random/Mag.txt";
+    tatus->writeToFile( inputfile, outputfile, prot );
+
+    std::ifstream fromPacker( outputfile, std::ios::binary );
+
+    if( !fromPacker.is_open() ) {
+
+        throw std::runtime_error( "cant open file " );
+
+    } else {
+
+        char value;
+        int count = 0;
+
+        while( !fromPacker.eof() ) {
+
+            fromPacker.read( ( char* )&value, sizeof( char ) );
+            count++;
+
+        }
+
+        ASSERT_GT( count - 1, 1211 );
+    }
+}
+
+TEST( PackerTests, Random_Std_MIX ) {
+
+    auto tatus = createPackerImpl( PackerType::Random );
+    Protocol prot { ProtocolType::Standart,  50, 1 };
+
+    const string inputfile = "packer/randsym.txt";
+    const string outputfile = "packer/random/Std_MIX.txt";
+    tatus->writeToFile( inputfile, outputfile, prot );
+
+    std::ifstream fromPacker( outputfile, std::ios::binary );
+
+    if( !fromPacker.is_open() ) {
+
+        throw std::runtime_error( "cant open file " );
+
+    } else {
+
+        char value;
+        std::string str;
+        int count = 0;
+
+        while( !fromPacker.eof() ) {
+
+            fromPacker.read( ( char* )&value, sizeof( char ) );
+            if( ( count < 4 ) & ( str.size() < 4 ) ) {
+                str += value;
+            }
+            count++;
+        }
+
+        ASSERT_NE( str, "0000" );
+
+        ASSERT_GT( count - 1, 1211 );
+    }
+}
+
+TEST( PackerTests, Random_Mag_MIX ) {
+
+    auto tatus = createPackerImpl( PackerType::Random );
+    Protocol prot { ProtocolType::Magic,  50, 1 };
+
+    const string inputfile = "packer/randsym.txt";
+    const string outputfile = "packer/random/Mag_MIX.txt";
+    tatus->writeToFile( inputfile, outputfile, prot );
+
+    std::ifstream fromPacker( outputfile, std::ios::binary );
+
+    if( !fromPacker.is_open() ) {
+
+        throw std::runtime_error( "cant open file " );
+
+    } else {
+
+        char value;
+        std::string str;
+        int count = 0;
+
+        while( !fromPacker.eof() ) {
+
+            fromPacker.read( ( char* )&value, sizeof( char ) );
+            if( ( count >= 4 ) & ( str.size() != 4 ) ) {
+                str += value;
+            }
+            count++;
+        }
+        ASSERT_NE( str, "0000" );
+        ASSERT_GT( count - 1, 1211 );
+    }
+}
+
+
+
 /*
    TEST( PackerTests, RandomtWriteMagic ) {
 

@@ -4,8 +4,7 @@ void RandomImpl::writeToFile( const string& inputfile, const string& outputfile,
 
     setProtocol( protocol );
 
-
-    std::ifstream originFile( inputfile ); // open file with origin data
+    std::ifstream originFile( inputfile, std::ios::binary ); // open file with origin data
 
     if( !originFile.is_open() ) {
 
@@ -13,76 +12,81 @@ void RandomImpl::writeToFile( const string& inputfile, const string& outputfile,
 
     } else {
 
-        this->outfile.open( outputfile ); // open file to write
+        this->outfile.open( outputfile, std::ios::binary ); // open file to write
         if( !outfile.is_open() ) {
 
             throw std::runtime_error( "cant open file " );
 
         } else {
 
-            std::string str;
+            char value;
+            int count = 0;
 
-            while( !originFile.eof() ) { // until file finish
+            while( !originFile.eof() ) {
 
-                std::getline( originFile, str ); // read string
-                addInfo( str ); // добавляем служебную информацию
-                formPack( str ); // write to file
+                originFile.read( ( char* )&value, sizeof( char ) );
+                count++;
+                // std::cerr << count << ") val = " << value << "\n"; // это пробел
+                data += value;
+
 
             }
-            if( data.size() != 0 ) {
-                printPack();
+            data.erase( data.size() - 1, 1 );
+            // std::cerr << "amount sym in origdata = " << count - 1 << "\n";
+            // std::cerr << "the last = " << value << "\n"; // это пробел
+
+
+            if( prot.type == ProtocolType::Standart ) {
+
+                addInfo();// добавляем служебную информацию
             }
+
+            // float amount_of_packs = ( prot.N - headerSize ) / ( k_in_data + 1 );
+            // std::cerr << "amount of string = " <<  ceil( data.size() / ( k_in_data + 1 ) / amount_of_packs ) << std::endl;
+
+            formPack();
             printvecdata();
-
-            outfile.close(); // close file
+            outfile.close();
         }
 
     }
+
 }
 
+void RandomImpl::formPack() {
 
-void RandomImpl::formPack( std::string& str ) {
+    uint16_t length = data.size();
+    std::string str;
 
-    uint16_t length = str.size();
-
-
-    if( length > spaceInPack ) { // проверка влезет ли строка в пакет
+    if( length > spaceInPack ) {
 
 
         uint16_t kOfPacket = ( spaceInPack / ( k_in_data + 1 ) ); // какое количество пакетов можно добавить в текущую строку
         setkOfSym( kOfPacket );
         for( uint16_t i = 0; i < kOfPacket * ( k_in_data + 1 ); i++ ) {
-            data = data + str[ i ];
+            str = str + data[ i ];
         }
-        str.erase( 0, kOfPacket * ( k_in_data + 1 ) );
-
-        printPack();
+        data.erase( 0, kOfPacket * ( k_in_data + 1 ) );
+        finishPack( str );
         nextPacket();
-        if( str.size() != 0 ) {
-            formPack( str );
+        if( data.size() != 0 ) {
+            formPack();
         }
-
-
-        // если не влезает то делим на две - одну пишем в файл, другой вызываем formPack
 
     } else if( length < spaceInPack ) {
 
+
         setkOfSym( length / ( this->k_in_data + 1 ) );
-        data = data + str;
+        str = data + str;
         resetPackSpace( spaceInPack - length );
+        finishPack( str );
 
-    } else if( length == spaceInPack ) {// пишем в файл и (номер пакета) ++
-
+    } else if( length == spaceInPack ) {
         setkOfSym( length / ( this->k_in_data + 1 ) );
-        data = data + str;
-        if( prot.type == ProtocolType::Standart ) {
-            while( data.size() < maxSpace ) {
-                data = data + "&";
-            }
-        }
-        printPack();
-        nextPacket();
+        str = data + str;
 
+        finishPack( str );
+        // nextPacket();
 
     }
 
@@ -93,35 +97,24 @@ void RandomImpl::nextPacket() {
     this->currpackNum++;
     resetPackSpace();
     this->kOfSym = 0;
-    this->data = "";
+
 }
 
-void RandomImpl::printPack() {
+void RandomImpl::finishPack( std::string& str ) { // also add pack to common vector
 
-// if( this->currpackNum == 146 ) {
-//// outfile << "\n";
-// std::cerr << "stop";
-// }
-// ;
     if( prot.type == ProtocolType::Standart ) {
-        while( data.size() < maxSpace ) {
-            data = data + "&";
+        while( str.size() < maxSpace ) {
+            str = str + "&";
         }
     }
-    printHeadInfo();
-    vecdata.push_back( data );
-// for( uint16_t i = 0; i < data.size(); i++ ) {
-
-// outfile << data[ i ];
-
-// }
+    addHeadInfo( str );
+    vecdata.push_back( str );
 }
 
 void RandomImpl::printString( std::string& str ) {
 
     for( uint16_t i = 0; i < str.size(); i++ ) {
-        outfile << str[ i ];
-
+        outfile.write( ( char* )( &str[ i ] ), sizeof( char ) );
     }
 }
 
@@ -136,28 +129,26 @@ void RandomImpl::printvecdata() {
                 auto index { vecdata.begin() };
                 x = { rand() % ( vecdata.size() - 1 ) };
                 printString( vecdata[ x ] );
-                // std::cerr << vecdata[ x ] << "\n";
                 vecdata.erase( index + x );
             } else {
 
                 printString( vecdata[ 0 ] );
-                // std::cerr << vecdata[ 0 ];
+
             }
         } else {
 
             printString( vecdata[ i ] );
-            // std::cerr << vecdata[ i ];
-
+            // outfile << "\n";
 
         }
-        if( i != size - 1 ) {
-            outfile << "\n";
-        }
+        // if( i != size - 1 ) {
+        // outfile << "\n";
+        // }
     }
 }
 
 
-void RandomImpl::resetPackSpace( uint16_t newSpace   ) {
+void RandomImpl::resetPackSpace( uint16_t newSpace  ) {
 
     this->spaceInPack = newSpace;
 }
@@ -176,22 +167,22 @@ void RandomImpl::setkOfSym( uint16_t newK  ) {
 
 
 
-void RandomImpl::addInfo( std::string& str ) {
+void RandomImpl::addInfo() {
 
     std::string payloadheader;
-    uint16_t endOfStr = str.size();
+    uint16_t endOfStr = data.size();
 
     for( uint16_t i = 0; i < endOfStr; i++ ) {
 
         payloadheader = std::to_string( i );
-        while( payloadheader.size() != this->k_in_data ) {
+        while( payloadheader.size() < this->k_in_data ) {
             payloadheader = "0" + payloadheader;
         }
-        str.insert( i * ( k_in_data + 1 ), payloadheader );
+        data.insert( i * ( k_in_data + 1 ), payloadheader );
     }
 }
 
-void RandomImpl::printHeadInfo() { // and add to data
+void RandomImpl::addHeadInfo( std::string& str ) {
 
     if( prot.type == ProtocolType::Standart ) {
 
@@ -199,7 +190,7 @@ void RandomImpl::printHeadInfo() { // and add to data
         while( header1.size() != k_in_1stHead ) {
             header1 = "0" + header1;
         }
-        data = header1 + data;
+        str = header1 + str;
         // outfile << header1 << "\t";
     }
     if( prot.type == ProtocolType::Magic ) {
@@ -213,16 +204,13 @@ void RandomImpl::printHeadInfo() { // and add to data
         while( header2.size() != k_in_2ndHead ) {
             header2 = "0" + header2;
         }
-        data = header + header1 + header2 + data;
+        str = header + header1 + header2 + str;
         // outfile << header << "\t" << header1 << "\t" << header2 << "\t";
     }
-
 
 }
 
 void RandomImpl::setProtocol( Protocol& protocol ) {
-
-
     this->prot = protocol;
     if( prot.type == ProtocolType::Standart ) {
 
@@ -232,13 +220,11 @@ void RandomImpl::setProtocol( Protocol& protocol ) {
     if( prot.type == ProtocolType::Magic ) {
 
         headerSize = k_in_1stHead + k_in_2ndHead + ( std::to_string( keyword ) ).size();
+        k_in_data = 0;
 
     }
     this->maxSpace = prot.N - headerSize;
 
     resetPackSpace();
-
 }
-
-
 

@@ -20,18 +20,20 @@ public:
 
 private:
 
-    void formPack( std::string& str );
-    void addInfo( std::string& str ); //
-    void printHeadInfo(); // заголовок печатается отдельно от данных
+
+
+    void formPack();
+    void addInfo(); //
+    void addHeadInfo( string& str ); // заголовок печатается отдельно от данных
     void nextPacket();
     void resetPackSpace( uint16_t newSpace );
     void resetPackSpace();
     void setProtocol( Protocol& protocol );
-    void printPack(); //
+    void finishPack( string& str ); //
     void setkOfSym( uint16_t newK  );
-
     void printvecdata();
-    void printString( std::string& str );
+    void printString( string& str );
+
 
 };
 
