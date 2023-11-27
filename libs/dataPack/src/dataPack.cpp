@@ -32,8 +32,8 @@ void AlignedImpl::writeToFile( const string& inputfile, const string& outputfile
 
             }
             data.erase( data.size() - 1, 1 );
-            std::cerr << "amount sym in origdata = " << count - 1 << "\n";
-            std::cerr << "the last = " << value << "\n"; // это пробел
+// std::cerr << "amount sym in origdata = " << count - 1 << "\n";
+// std::cerr << "the last = " << value << "\n"; // это пробел
 
 
             if( prot.type == ProtocolType::Standart ) {
