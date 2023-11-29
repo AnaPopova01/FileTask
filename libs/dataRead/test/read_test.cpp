@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "dataRead.h"
+#include "dataRead/dataRead.h"
 
 TEST( ReaderTests, creating ) {
 
@@ -20,7 +20,7 @@ TEST( ReaderTests, Alig_Std ) {
 
     if( ( !originFile.is_open() ) | ( !unpackedFile.is_open() ) ) {
 
-        throw std::runtime_error( "cant open file " );
+        throw std::runtime_error( "cant open file for testing" );
 
     } else {
 

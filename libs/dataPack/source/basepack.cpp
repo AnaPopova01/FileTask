@@ -1,6 +1,12 @@
-#include "dataPack.h"
+#include "dataPack/basepack.h"
 
-void AlignedImpl::writeToFile( const string& inputfile, const string& outputfile, Protocol& protocol ) {
+BaseImpl::BaseImpl( PackerType type ) {
+
+
+    this->pack_type = type;
+}
+
+void BaseImpl::writeToFile( const std::string& inputfile, const std::string& outputfile, Protocol& protocol ) {
 
     setProtocol( protocol );
 
@@ -8,14 +14,14 @@ void AlignedImpl::writeToFile( const string& inputfile, const string& outputfile
 
     if( !originFile.is_open() ) {
 
-        throw std::runtime_error( "cant open file " );
+        throw std::runtime_error( "cant open INPUT file " );
 
     } else {
 
         this->outfile.open( outputfile, std::ios::binary ); // open file to write
         if( !outfile.is_open() ) {
 
-            throw std::runtime_error( "cant open file " );
+            throw std::runtime_error( "cant open OUTPUT file " );
 
         } else {
 
@@ -32,8 +38,8 @@ void AlignedImpl::writeToFile( const string& inputfile, const string& outputfile
 
             }
             data.erase( data.size() - 1, 1 );
-// std::cerr << "amount sym in origdata = " << count - 1 << "\n";
-// std::cerr << "the last = " << value << "\n"; // это пробел
+            // std::cerr << "amount sym in origdata = " << count - 1 << "\n";
+            // std::cerr << "the last = " << value << "\n"; // это пробел
 
 
             if( prot.type == ProtocolType::Standart ) {
@@ -41,8 +47,8 @@ void AlignedImpl::writeToFile( const string& inputfile, const string& outputfile
                 addInfo();// добавляем служебную информацию
             }
 
-// float amount_of_packs = ( prot.N - headerSize ) / ( k_in_data + 1 );
-// std::cerr << "amount of string = " <<  ceil( data.size() / ( k_in_data + 1 ) / amount_of_packs ) << std::endl;
+            // float amount_of_packs = ( prot.N - headerSize ) / ( k_in_data + 1 );
+            // std::cerr << "amount of string = " <<  ceil( data.size() / ( k_in_data + 1 ) / amount_of_packs ) << std::endl;
 
             formPack();
             printvecdata();
@@ -53,7 +59,7 @@ void AlignedImpl::writeToFile( const string& inputfile, const string& outputfile
 
 }
 
-void AlignedImpl::formPack() {
+void BaseImpl::formPack() {
 
     uint16_t length = data.size();
     std::string str;
@@ -92,7 +98,7 @@ void AlignedImpl::formPack() {
 
 }
 
-void AlignedImpl::nextPacket() {
+void BaseImpl::nextPacket() {
 
     this->currpackNum++;
     resetPackSpace();
@@ -100,7 +106,7 @@ void AlignedImpl::nextPacket() {
 
 }
 
-void AlignedImpl::finishPack( std::string& str ) { // also add pack to common vector
+void BaseImpl::finishPack( std::string& str ) { // also add pack to common vector
 
     if( prot.type == ProtocolType::Standart ) {
         while( str.size() < maxSpace ) {
@@ -111,14 +117,14 @@ void AlignedImpl::finishPack( std::string& str ) { // also add pack to common ve
     vecdata.push_back( str );
 }
 
-void AlignedImpl::printString( std::string& str ) {
+void BaseImpl::printString( std::string& str ) {
 
     for( uint16_t i = 0; i < str.size(); i++ ) {
         outfile.write( ( char* )( &str[ i ] ), sizeof( char ) );
     }
 }
 
-void AlignedImpl::printvecdata() {
+void BaseImpl::printvecdata() {
     auto size = vecdata.size();
     int x = 0;
 
@@ -141,33 +147,43 @@ void AlignedImpl::printvecdata() {
             // outfile << "\n";
 
         }
-// if( i != size - 1 ) {
+        // if( i != size - 1 ) {
         // outfile << "\n";
-// }
+        // }
     }
 }
 
 
-void AlignedImpl::resetPackSpace( uint16_t newSpace  ) {
+void BaseImpl::resetPackSpace( uint16_t newSpace  ) {
 
     this->spaceInPack = newSpace;
 }
 
-void AlignedImpl::resetPackSpace() {
+void BaseImpl::resetPackSpace() {
 
+    switch( pack_type ) {
 
-    this->spaceInPack = maxSpace;
+    case PackerType::Aligned:
 
+        this->spaceInPack = maxSpace;
+        break;
+
+    case PackerType::Random:
+        // srand( time( NULL ) );
+
+        this->spaceInPack = k_in_data + 1 + ( 1 + rand() % ( prot.N - ( headerSize + k_in_data + 1 ) ) );
+        break;
+    }
 }
 
-void AlignedImpl::setkOfSym( uint16_t newK  ) {
+void BaseImpl::setkOfSym( uint16_t newK  ) {
 
     this->kOfSym += newK;
 }
 
 
 
-void AlignedImpl::addInfo() {
+void BaseImpl::addInfo() {
 
     std::string payloadheader;
     uint16_t endOfStr = data.size();
@@ -182,7 +198,7 @@ void AlignedImpl::addInfo() {
     }
 }
 
-void AlignedImpl::addHeadInfo( std::string& str ) {
+void BaseImpl::addHeadInfo( std::string& str ) {
 
     if( prot.type == ProtocolType::Standart ) {
 
@@ -210,7 +226,7 @@ void AlignedImpl::addHeadInfo( std::string& str ) {
 
 }
 
-void AlignedImpl::setProtocol( Protocol& protocol ) {
+void BaseImpl::setProtocol( Protocol& protocol ) {
     this->prot = protocol;
     if( prot.type == ProtocolType::Standart ) {
 
@@ -227,4 +243,5 @@ void AlignedImpl::setProtocol( Protocol& protocol ) {
 
     resetPackSpace();
 }
+
 

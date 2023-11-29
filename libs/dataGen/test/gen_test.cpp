@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "dataGen.h"
+#include "dataGen/dataGen.h"
 
 TEST( GeneratorTests, creating ) {
 
@@ -52,6 +52,7 @@ TEST( GeneratorTests, writeToFile ) {
 
 
         }
+        ASSERT_GT( str.size(), 0 );
         ASSERT_LE( str.size(), obj.getMaxLen() * obj.getK() );
         ASSERT_EQ( str.find( '&' ), std::string::npos );
 

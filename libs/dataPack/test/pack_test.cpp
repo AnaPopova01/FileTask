@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
-#include "src/dataPack.h"
-#include "src/randPack.h"
-#include "include/packerfactory.h"
+#include "dataPack/packerfactory.h"
+using std::string;
+
 
 // TEST( PackerTests, creating ) {
 
@@ -25,7 +25,7 @@ TEST( PackerTests, Aligned_Std ) {
 
     if( !fromPacker.is_open() ) {
 
-        throw std::runtime_error( "cant open file " );
+        throw std::runtime_error( "cant open file for testing" );
 
     } else {
 

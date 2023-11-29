@@ -1,4 +1,4 @@
-#include "dataGen.h"
+#include "dataGen/dataGen.h"
 #include <iostream>
 
 DataGenerator::DataGenerator() {
@@ -49,7 +49,7 @@ void DataGenerator::getSett( std::ifstream& configFile, char pole ) {
 
 void DataGenerator::writeToFile( std::string& path ) {
 
-    // srand( time( NULL ) );
+    srand( time( NULL ) );
 
     std::ofstream file( path );
 

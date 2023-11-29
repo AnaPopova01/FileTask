@@ -1,16 +1,5 @@
-#pragma once
-#include "ipacker.h"
-#include <iostream>
-#include <memory>
-#include "src/dataPack.h"
-#include "src/randPack.h"
-
-using std::cerr;
-using std::cin;
-using std::endl;
-
-
-enum class PackerType : uint32_t { Aligned = 0, Random = 1 };
+#include "dataPack/packerfactory.h"
+#include "dataPack/basepack.h"
 
 
 bool isInRange( uint32_t value, uint32_t left, uint32_t right ) {
@@ -64,10 +53,10 @@ std::unique_ptr< IPacker > createPackerImpl() {
 
     switch( type ) {
     case PackerType::Aligned:
-        ret = std::make_unique< AlignedImpl >();
+        ret = std::make_unique< BaseImpl >( PackerType::Aligned );
         break;
     case PackerType::Random:
-        ret = std::make_unique< RandomImpl >();
+        ret = std::make_unique< BaseImpl >( PackerType::Random );
         break;
     default:
         throw std::runtime_error( " unsupported printer type " + std::to_string( static_cast< int >( type ) ) );
@@ -83,10 +72,10 @@ std::unique_ptr< IPacker > createPackerImpl( PackerType type ) {
 
     switch( type ) {
     case PackerType::Aligned:
-        ret = std::make_unique< AlignedImpl >();
+        ret = std::make_unique< BaseImpl >( PackerType::Aligned );
         break;
     case PackerType::Random:
-        ret = std::make_unique< RandomImpl >();
+        ret = std::make_unique< BaseImpl >( PackerType::Random );
         break;
     default:
         throw std::runtime_error( " unsupported printer type " + std::to_string( static_cast< int >( type ) ) );

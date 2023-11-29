@@ -1,52 +1,30 @@
 #pragma once
 #include <cstdint>
-#include <iostream>
+#include <string>
 #include <fstream>
+#include "ipacker.h"
+
+#include <map>
 #include <vector>
-
-using std::string;
-
-enum class ProtocolType : uint32_t { Standart = 0, Magic = 1 };
-// Standart - добавляет подзаголовок к данным и выравнивает пакет до фиксированной длины, заголовок состоит только из порядкового номера пакета
-// Magic - добавляет подзаголовок к данным,заголовок состоит ключевого слова, порядкового номера пакета и его длины
-
-struct Protocol {
-
-    ProtocolType type;
-    uint16_t N; // max length of packet
-    bool mixPackets = 0;
-};
-
-
-
-class IPacker {
-public:
-    virtual void writeToFile() = 0;
-    virtual void writeToFile( const string& inputfile, const string& outputfile, Protocol& prot ) = 0;
-    virtual void getKey() = 0;
-
-};
-
-
+#include <iostream>
 
 class BaseImpl: public IPacker {
 
 public:
 
-
-    void writeToFile()override {
+    BaseImpl( PackerType type );
+    void writeToFile() override {
         std::cerr << "cringe from Base" << std::endl;
     }
-    virtual void writeToFile( const string& inputfile, const string& outputfile, Protocol& prot ) = 0;
-    void getKey() override {
+    void writeToFile( const std::string& inputfile, const std::string& outputfile, Protocol& prot ) override final;
+    void getKey() override final {
         std::cerr << keyword;
     }
 
 protected:
 
-
     int amountOfSym = 0;
-
+    PackerType pack_type;
     Protocol prot { ProtocolType::Standart,  50, 0 };
 
     // размер служебных полей
@@ -66,7 +44,20 @@ protected:
     uint16_t kOfSym = 0; // кол-во символов в текущем пакете
     uint16_t spaceInPack = 0; // сколько свободного места [количество символов] для данных осталось в пакете
     uint16_t maxSpace = 0; // максимальный размер для данных
-    string data = ""; // данные без заголовка
-    std::vector< string > vecdata; // вектор пакетов для их перемешивания
+    std::string data = ""; // данные без заголовка
 
+    std::map< std::int16_t, std::string > strdata;
+    std::vector< std::string > vecdata; // вектор пакетов для их перемешивания
+
+    void formPack();
+    void addInfo(); //
+    void addHeadInfo( std::string& str ); // заголовок печатается отдельно от данных
+    void nextPacket();
+    void resetPackSpace( uint16_t newSpace );
+    void resetPackSpace();
+    void setProtocol( Protocol& protocol );
+    void finishPack( std::string& str ); //
+    void setkOfSym( uint16_t newK  );
+    void printvecdata();
+    void printString( std::string& str );
 };

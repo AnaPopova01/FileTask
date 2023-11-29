@@ -1,4 +1,4 @@
-#include "dataRead.h"
+#include "dataRead/dataRead.h"
 
 // Standart - добавляет подзаголовок к данным и выравнивает пакет до фиксированной длины, заголовок состоит только из порядкового номера пакета
 // Magic - не добавляет подзаголовок к данным,заголовок состоит ключевого слова, порядкового номера пакета и его длины
@@ -11,14 +11,14 @@ void DataRead::readFromFile( const string& inputfile, const string& outputfile )
     std::ifstream originFile( inputfile, std::ios::binary ); // open file with origin data
 
     if( !originFile.is_open() ) {
-        throw std::runtime_error( "cant open file " );
+        throw std::runtime_error( "cant open INPUT file " );
 
     } else {
 
         outfile.open( outputfile, std::ios::binary );
         if( !outfile.is_open() ) {
 
-            throw std::runtime_error( "cant open file " );
+            throw std::runtime_error( "cant open OUTPUT file " );
 
         } else {
 
