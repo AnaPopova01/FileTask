@@ -8,10 +8,8 @@
 class DataGenerator {
 public:
 
-    DataGenerator();
-
     void readConfig( const std::string& filename ); // чтение файла конфигурации
-    void writeToFile( std::string& path ); // запись строк в файл
+    void writeToFile( const std::string& path ); // запись строк в файл
 
     uint16_t getN() {
         return N;

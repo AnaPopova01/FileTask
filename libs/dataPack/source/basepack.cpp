@@ -6,7 +6,7 @@ BaseImpl::BaseImpl( PackerType type ) {
     this->pack_type = type;
 }
 
-void BaseImpl::writeToFile( const std::string& inputfile, const std::string& outputfile, Protocol& protocol ) {
+void BaseImpl::pack_processing( const std::string& inputfile, const std::string& outputfile, Protocol& protocol ) {
 
     setProtocol( protocol );
 

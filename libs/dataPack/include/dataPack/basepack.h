@@ -13,17 +13,12 @@ class BaseImpl: public IPacker {
 public:
 
     BaseImpl( PackerType type );
-    void writeToFile() override {
-        std::cerr << "cringe from Base" << std::endl;
-    }
-    void writeToFile( const std::string& inputfile, const std::string& outputfile, Protocol& prot ) override final;
-    void getKey() override final {
-        std::cerr << keyword;
-    }
+    void pack_processing( const std::string& inputfile, const std::string& outputfile, Protocol& prot ) override final;
+
 
 protected:
 
-    int amountOfSym = 0;
+
     PackerType pack_type;
     Protocol prot { ProtocolType::Standart,  50, 0 };
 
@@ -35,8 +30,6 @@ protected:
     unsigned int keyword = 0xDED;
 
     std::ofstream outfile; // path to file for writing data
-    std::ifstream infile;
-    // uint16_t N; // max length of packet
 
     // текущие значения служебных полей
     // значение подзаголовка символа считается в addInfo и не имеет специального поля
@@ -46,7 +39,6 @@ protected:
     uint16_t maxSpace = 0; // максимальный размер для данных
     std::string data = ""; // данные без заголовка
 
-    std::map< std::int16_t, std::string > strdata;
     std::vector< std::string > vecdata; // вектор пакетов для их перемешивания
 
     void formPack();

@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.5)
 
 project(FilesAndStrings)
 
-#set(CMAKE_CXX_FLAGS_DEBUG "-ggdb -g -O0")
+set(CMAKE_CXX_FLAGS_DEBUG "-ggdb -g -O0")
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 set(UNITTEST ON)

@@ -18,7 +18,7 @@ TEST( PackerTests, Aligned_Std ) {
 
     const string inputfile = "packer/randsym.txt";
     const string outputfile = "packer/aligned/Std.txt";
-    tatus->writeToFile( inputfile, outputfile, prot );
+    tatus->pack_processing( inputfile, outputfile, prot );
 
 
     std::ifstream fromPacker( outputfile, std::ios::binary );
@@ -52,7 +52,7 @@ TEST( PackerTests, Aligned_Magic ) {
 
     const string inputfile = "packer/randsym.txt";
     const string outputfile = "packer/aligned/Mag.txt";
-    tatus->writeToFile( inputfile, outputfile, prot );
+    tatus->pack_processing( inputfile, outputfile, prot );
 
     std::ifstream fromPacker( outputfile, std::ios::binary );
 
@@ -86,7 +86,7 @@ TEST( PackerTests, Aligned_Std_MIX ) {
 
     const string inputfile = "packer/randsym.txt";
     const string outputfile = "packer/aligned/Std_MIX.txt";
-    tatus->writeToFile( inputfile, outputfile, prot );
+    tatus->pack_processing( inputfile, outputfile, prot );
 
     std::ifstream fromPacker( outputfile, std::ios::binary );
 
@@ -123,7 +123,7 @@ TEST( PackerTests, Aligned_Mag_MIX ) {
 
     const string inputfile = "packer/randsym.txt";
     const string outputfile = "packer/aligned/Mag_MIX.txt";
-    tatus->writeToFile( inputfile, outputfile, prot );
+    tatus->pack_processing( inputfile, outputfile, prot );
 
     int kOfLines = 0;
     std::ifstream fromPacker( outputfile, std::ios::binary );
@@ -161,7 +161,7 @@ TEST( PackerTests, Random_Std ) {
 
     const string inputfile = "packer/randsym.txt";
     const string outputfile = "packer/random/Std.txt";
-    tatus->writeToFile( inputfile, outputfile, prot );
+    tatus->pack_processing( inputfile, outputfile, prot );
 
     std::ifstream fromPacker( outputfile, std::ios::binary );
 
@@ -192,7 +192,7 @@ TEST( PackerTests, Random_Magic ) {
 
     const string inputfile = "packer/randsym.txt";
     const string outputfile = "packer/random/Mag.txt";
-    tatus->writeToFile( inputfile, outputfile, prot );
+    tatus->pack_processing( inputfile, outputfile, prot );
 
     std::ifstream fromPacker( outputfile, std::ios::binary );
 
@@ -223,7 +223,7 @@ TEST( PackerTests, Random_Std_MIX ) {
 
     const string inputfile = "packer/randsym.txt";
     const string outputfile = "packer/random/Std_MIX.txt";
-    tatus->writeToFile( inputfile, outputfile, prot );
+    tatus->pack_processing( inputfile, outputfile, prot );
 
     std::ifstream fromPacker( outputfile, std::ios::binary );
 
@@ -259,7 +259,7 @@ TEST( PackerTests, Random_Mag_MIX ) {
 
     const string inputfile = "packer/randsym.txt";
     const string outputfile = "packer/random/Mag_MIX.txt";
-    tatus->writeToFile( inputfile, outputfile, prot );
+    tatus->pack_processing( inputfile, outputfile, prot );
 
     std::ifstream fromPacker( outputfile, std::ios::binary );
 
@@ -388,25 +388,25 @@ TEST( PackerTests, Random_Mag_MIX ) {
  */
 
 
-/*
-   TEST( PackerTests, RandomsstWriteMagic_MIX ) {
 
-   std::vector nums = { 5, 34, 2, 4, 60, 8, 3, 209, 599 };
+// TEST( PackerTests, RandomsstWriteMagic_MIX ) {
 
-   std::set< decltype( nums )::value_type > sorted( nums.begin(), nums.end() );
+// std::vector nums = { 5, 34, 2, 4, 60, 8, 3, 209, 599 };
+
+// std::set< decltype( nums )::value_type > sorted( nums.begin(), nums.end() );
 
 
 
-   for( auto vVal : nums ) {
-   std::cerr << vVal << ", ";
-   }
-   std::cerr <<  "\n ";
+// for( auto vVal : nums ) {
+// std::cerr << vVal << ", ";
+// }
+// std::cerr <<  "\n ";
 
-   for( auto sval : sorted ) {
-   std::cerr << sval << ", ";
-   }
-   std::cerr <<  "\n ";
+// for( auto sval : sorted ) {
+// std::cerr << sval << ", ";
+// }
+// std::cerr <<  "\n ";
 
-   }
- */
+// }
+
 

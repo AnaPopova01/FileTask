@@ -17,7 +17,7 @@ class DataRead {
 public:
 
 
-    void readFromFile( const string& inputfile, const string& outputfile );
+    void read_processing( const string& inputfile, const string& outputfile );
 
 private:
 

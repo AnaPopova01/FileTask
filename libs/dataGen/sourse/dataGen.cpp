@@ -1,15 +1,12 @@
 #include "dataGen/dataGen.h"
 #include <iostream>
 
-DataGenerator::DataGenerator() {
-
-}
 
 void DataGenerator::readConfig( const std::string& filename ) {
 
     std::ifstream configFile( filename ); // open file
     if( !configFile.is_open() ) {
-        throw std::runtime_error( "cant open file " ); // если не получилось throw
+        throw std::runtime_error( "cant open config file" ); // если не получилось throw
     } else {
 
         // записать строку из файла
@@ -35,19 +32,23 @@ void DataGenerator::getSett( std::ifstream& configFile, char pole ) {
     str.std::string::erase( 0, pos + 1 );
     if( pole == 's' ) {
         this->sym = str [ 0 ];
-    }
-    if( pole == 'N' ) {
+    } else if( pole == 'N' ) {
         this->N = std::stoi( str );
+        if( N == 0 ) {
+            throw std::runtime_error( "null value of package length in configFile" );
+        }
 
-    }
-    if( pole == 'k' ) {
+    } else if( pole == 'k' ) {
         this->k = std::stoi( str );
+        if( k == 0 ) {
+            throw std::runtime_error( "null value of quantity of strings in configFile" );
+        }
     }
 
 }
 
 
-void DataGenerator::writeToFile( std::string& path ) {
+void DataGenerator::writeToFile( const std::string& path ) {
 
     srand( time( NULL ) );
 
@@ -67,10 +68,10 @@ void DataGenerator::writeToFile( std::string& path ) {
 // file << "\n";
 
 // }
-        if( numOfStr == this->k - 1 ) {
-            file << "%";
+// if( numOfStr == this->k - 1 ) {
+// file << "%";
 
-        }
+// }
     }
 
 }

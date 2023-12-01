@@ -9,14 +9,9 @@ using std::cin;
 using std::endl;
 
 
-
-
-
 std::unique_ptr< IPacker > createPackerImpl();
 
 std::unique_ptr< IPacker > createPackerImpl( PackerType type );
-
-
 
 ProtocolType getProtocolType();
 

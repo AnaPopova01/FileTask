@@ -14,7 +14,7 @@ struct Protocol {
 
     ProtocolType type;
     uint16_t N; // max length of packet
-    bool mixPackets = 0;
+    bool mixPackets { false };
 };
 
 
@@ -22,9 +22,8 @@ struct Protocol {
 class IPacker {
 public:
 
-    virtual void writeToFile() = 0;
-    virtual void writeToFile( const std::string& inputfile, const std::string& outputfile, Protocol& prot ) = 0;
-    virtual void getKey() = 0;
+
+    virtual void pack_processing( const std::string& inputfile, const std::string& outputfile, Protocol& prot ) = 0;
 
 };
 

@@ -11,14 +11,14 @@ TEST( ReaderTests, Alig_Std ) {
     DataRead obj;
     std::string inpath = "reader/aligned/packed/Std.txt";
     std::string outpath = "reader/aligned/unpacked/Std.txt";
-    obj.readFromFile( inpath, outpath );
+    obj.read_processing( inpath, outpath );
 
     std::string origpath = "reader/randsym.txt";
 
     std::ifstream originFile(  origpath );
     std::ifstream unpackedFile( outpath );
 
-    if( ( !originFile.is_open() ) | ( !unpackedFile.is_open() ) ) {
+    if( ( !originFile.is_open() ) || ( !unpackedFile.is_open() ) ) {
 
         throw std::runtime_error( "cant open file for testing" );
 
@@ -47,14 +47,14 @@ TEST( ReaderTests, Alig_Std_MIX ) {
     DataRead obj;
     std::string inpath = "reader/aligned/packed/Std_MIX.txt";
     std::string outpath = "reader/aligned/unpacked/Std_MIX.txt";
-    obj.readFromFile( inpath, outpath );
+    obj.read_processing( inpath, outpath );
 
     std::string origpath = "reader/randsym.txt";
 
     std::ifstream originFile(  origpath );
     std::ifstream unpackedFile( outpath );
 
-    if( ( !originFile.is_open() ) | ( !unpackedFile.is_open() ) ) {
+    if( ( !originFile.is_open() ) || ( !unpackedFile.is_open() ) ) {
 
         throw std::runtime_error( "cant open file " );
 
@@ -83,13 +83,13 @@ TEST( ReaderTests, Alig_Mag ) {
     DataRead obj;
     std::string inpath = "reader/aligned/packed/Mag.txt";
     std::string outpath = "reader/aligned/unpacked/Mag.txt";
-    obj.readFromFile( inpath, outpath );
+    obj.read_processing( inpath, outpath );
 
     std::string origpath = "reader/randsym.txt";
     std::ifstream originFile(  origpath );
     std::ifstream unpackedFile( outpath );
 
-    if( ( !originFile.is_open() ) | ( !unpackedFile.is_open() ) ) {
+    if( ( !originFile.is_open() ) || ( !unpackedFile.is_open() ) ) {
 
         throw std::runtime_error( "cant open file " );
 
@@ -118,13 +118,13 @@ TEST( ReaderTests, Alig_Mag_MIX ) {
     DataRead obj;
     std::string inpath = "reader/aligned/packed/Mag_MIX.txt";
     std::string outpath = "reader/aligned/unpacked/Mag_MIX.txt";
-    obj.readFromFile( inpath, outpath );
+    obj.read_processing( inpath, outpath );
 
     std::string origpath = "reader/randsym.txt";
     std::ifstream originFile(  origpath );
     std::ifstream unpackedFile( outpath );
 
-    if( ( !originFile.is_open() ) | ( !unpackedFile.is_open() ) ) {
+    if( ( !originFile.is_open() ) || ( !unpackedFile.is_open() ) ) {
 
         throw std::runtime_error( "cant open file " );
 
@@ -153,14 +153,14 @@ TEST( ReaderTests, Rand_Std ) {
     DataRead obj;
     std::string inpath = "reader/random/packed/Std.txt";
     std::string outpath = "reader/random/unpacked/Std.txt";
-    obj.readFromFile( inpath, outpath );
+    obj.read_processing( inpath, outpath );
 
     std::string origpath = "reader/randsym.txt";
 
     std::ifstream originFile(  origpath );
     std::ifstream unpackedFile( outpath );
 
-    if( ( !originFile.is_open() ) | ( !unpackedFile.is_open() ) ) {
+    if( ( !originFile.is_open() ) || ( !unpackedFile.is_open() ) ) {
 
         throw std::runtime_error( "cant open file " );
 
@@ -189,14 +189,14 @@ TEST( ReaderTests, Rand_Std_MIX ) {
     DataRead obj;
     std::string inpath = "reader/random/packed/Std_MIX.txt";
     std::string outpath = "reader/random/unpacked/Std_MIX.txt";
-    obj.readFromFile( inpath, outpath );
+    obj.read_processing( inpath, outpath );
 
     std::string origpath = "reader/randsym.txt";
 
     std::ifstream originFile(  origpath );
     std::ifstream unpackedFile( outpath );
 
-    if( ( !originFile.is_open() ) | ( !unpackedFile.is_open() ) ) {
+    if( ( !originFile.is_open() ) || ( !unpackedFile.is_open() ) ) {
 
         throw std::runtime_error( "cant open file " );
 
@@ -225,14 +225,14 @@ TEST( ReaderTests, Rand_Mag ) {
     DataRead obj;
     std::string inpath = "reader/random/packed/Mag.txt";
     std::string outpath = "reader/random/unpacked/Mag.txt";
-    obj.readFromFile( inpath, outpath );
+    obj.read_processing( inpath, outpath );
 
     std::string origpath = "reader/randsym.txt";
 
     std::ifstream originFile(  origpath );
     std::ifstream unpackedFile( outpath );
 
-    if( ( !originFile.is_open() ) | ( !unpackedFile.is_open() ) ) {
+    if( ( !originFile.is_open() ) || ( !unpackedFile.is_open() ) ) {
 
         throw std::runtime_error( "cant open file " );
 
@@ -261,14 +261,14 @@ TEST( ReaderTests, Rand_Mag_MIX ) {
     DataRead obj;
     std::string inpath = "reader/random/packed/Mag_MIX.txt";
     std::string outpath = "reader/random/unpacked/Mag_MIX.txt";
-    obj.readFromFile( inpath, outpath );
+    obj.read_processing( inpath, outpath );
 
     std::string origpath = "reader/randsym.txt";
 
     std::ifstream originFile(  origpath );
     std::ifstream unpackedFile( outpath );
 
-    if( ( !originFile.is_open() ) | ( !unpackedFile.is_open() ) ) {
+    if( ( !originFile.is_open() ) || ( !unpackedFile.is_open() ) ) {
 
         throw std::runtime_error( "cant open file " );
 

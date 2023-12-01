@@ -6,7 +6,7 @@
 using std::cerr;
 
 
-void DataRead::readFromFile( const string& inputfile, const string& outputfile ) {
+void DataRead::read_processing( const string& inputfile, const string& outputfile ) {
 
     std::ifstream originFile( inputfile, std::ios::binary ); // open file with origin data
 
