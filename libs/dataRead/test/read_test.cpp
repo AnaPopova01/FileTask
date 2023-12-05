@@ -1,48 +1,404 @@
 #include <gtest/gtest.h>
 #include "dataRead/dataRead.h"
 
-TEST( ReaderTests, creating ) {
 
-    DataRead obj;
-}
+TEST( PackerTests, reader_wrongInputPath_runtimeError ) {
+    try {
 
-TEST( ReaderTests, Alig_Std ) {
+        DataRead obj;
+        const string inpath = "samuraiway.noAim";
+        const string outpath = "reader/bin/toRead/unpacked/aligned/empty/Std.txt";
 
-    DataRead obj;
-    std::string inpath = "reader/aligned/packed/Std.txt";
-    std::string outpath = "reader/aligned/unpacked/Std.txt";
-    obj.read_processing( inpath, outpath );
-
-    std::string origpath = "reader/randsym.txt";
-
-    std::ifstream originFile(  origpath );
-    std::ifstream unpackedFile( outpath );
-
-    if( ( !originFile.is_open() ) || ( !unpackedFile.is_open() ) ) {
-
-        throw std::runtime_error( "cant open file for testing" );
-
-    } else {
+        obj.read_processing( inpath, outpath );
 
 
-        std::string orig_str;
-        std::string unpack_str;
 
-        while( !originFile.eof() ) {
+    } catch( std::runtime_error& e ) {
 
-            std::getline( originFile, orig_str );
-            std::getline( unpackedFile, unpack_str );
-
-            ASSERT_EQ( orig_str, unpack_str );
-
-
-        }
+        ASSERT_STREQ( e.what(),  "cant open input reader file" );
 
     }
 
 }
 
-TEST( ReaderTests, Alig_Std_MIX ) {
+TEST( ReaderTests, alignedType_StandartProt_CorrectValues ) {
+
+    std::map< int, string > files;
+    files[ 0 ] = "twenty_enter";
+    files[ 1 ] = "empty";
+    files[ 2 ] = "one_sym";
+    files[ 3 ] = "rand_lines";
+    files[ 4 ] = "rand_sym";
+    for( const auto& cases : files ) {
+
+        DataRead obj;
+        // std::cerr << "test\t" << cases.first << "\n";
+
+        std::string inpath = "reader/bin/toRead/packed/aligned/" + cases.second + "/Std.txt";
+        std::string outpath = "reader/bin/toRead/unpacked/aligned/" + cases.second + "/Std.txt";
+        std::string origpath = "reader/bin/toPack/" + cases.second + ".txt";
+
+        obj.read_processing( inpath, outpath );
+
+
+        std::ifstream originFile(  origpath );
+        std::ifstream unpackedFile( outpath );
+
+        if( ( !originFile.is_open() ) || ( !unpackedFile.is_open() ) ) {
+
+            throw std::runtime_error( "cant open files for testing" );
+
+        } else {
+
+
+            std::string orig_str;
+            std::string unpack_str;
+
+            while( !originFile.eof() ) {
+
+                std::getline( originFile, orig_str );
+                std::getline( unpackedFile, unpack_str );
+
+                ASSERT_EQ( orig_str, unpack_str );
+
+
+            }
+
+        }
+    }
+}
+
+TEST( ReaderTests, alignedType_MagicProt_CorrectValues ) {
+
+    std::map< int, string > files;
+    files[ 0 ] = "twenty_enter";
+    files[ 1 ] = "empty";
+    files[ 2 ] = "one_sym";
+    files[ 3 ] = "rand_lines";
+    files[ 4 ] = "rand_sym";
+    for( const auto& cases : files ) {
+
+        DataRead obj;
+        // std::cerr << "test\t" << cases.first << "\n";
+
+        std::string inpath = "reader/bin/toRead/packed/aligned/" + cases.second + "/Mag.txt";
+        std::string outpath = "reader/bin/toRead/unpacked/aligned/" + cases.second + "/Mag.txt";
+        std::string origpath = "reader/bin/toPack/" + cases.second + ".txt";
+
+        obj.read_processing( inpath, outpath );
+
+
+        std::ifstream originFile(  origpath );
+        std::ifstream unpackedFile( outpath );
+
+        if( ( !originFile.is_open() ) || ( !unpackedFile.is_open() ) ) {
+
+            throw std::runtime_error( "cant open files for testing" );
+
+        } else {
+
+
+            std::string orig_str;
+            std::string unpack_str;
+
+            while( !originFile.eof() ) {
+
+                std::getline( originFile, orig_str );
+                std::getline( unpackedFile, unpack_str );
+
+                ASSERT_EQ( orig_str, unpack_str );
+
+
+            }
+
+        }
+    }
+}
+
+TEST( ReaderTests, alignedType_StandartProtMIX_CorrectValues ) {
+
+    std::map< int, string > files;
+    files[ 0 ] = "twenty_enter";
+    files[ 1 ] = "empty";
+    files[ 2 ] = "one_sym";
+    files[ 3 ] = "rand_lines";
+    files[ 4 ] = "rand_sym";
+    for( const auto& cases : files ) {
+
+        DataRead obj;
+        // std::cerr << "test\t" << cases.first << "\n";
+
+        std::string inpath = "reader/bin/toRead/packed/aligned/" + cases.second + "/Std_MIX.txt";
+        std::string outpath = "reader/bin/toRead/unpacked/aligned/" + cases.second + "/Std_MIX.txt";
+        std::string origpath = "reader/bin/toPack/" + cases.second + ".txt";
+
+        obj.read_processing( inpath, outpath );
+
+
+        std::ifstream originFile(  origpath );
+        std::ifstream unpackedFile( outpath );
+
+        if( ( !originFile.is_open() ) || ( !unpackedFile.is_open() ) ) {
+
+            throw std::runtime_error( "cant open files for testing" );
+
+        } else {
+
+
+            std::string orig_str;
+            std::string unpack_str;
+
+            while( !originFile.eof() ) {
+
+                std::getline( originFile, orig_str );
+                std::getline( unpackedFile, unpack_str );
+
+                ASSERT_EQ( orig_str, unpack_str );
+
+
+            }
+
+        }
+    }
+}
+
+TEST( ReaderTests, alignedType_MagicProtMIX_CorrectValues ) {
+
+    std::map< int, string > files;
+    files[ 0 ] = "twenty_enter";
+    files[ 1 ] = "empty";
+    files[ 2 ] = "one_sym";
+    files[ 3 ] = "rand_lines";
+    files[ 4 ] = "rand_sym";
+    for( const auto& cases : files ) {
+
+        DataRead obj;
+        // std::cerr << "test\t" << cases.first << "\n";
+
+        std::string inpath = "reader/bin/toRead/packed/aligned/" + cases.second + "/Mag_MIX.txt";
+        std::string outpath = "reader/bin/toRead/unpacked/aligned/" + cases.second + "/Mag_MIX.txt";
+        std::string origpath = "reader/bin/toPack/" + cases.second + ".txt";
+
+        obj.read_processing( inpath, outpath );
+
+
+        std::ifstream originFile(  origpath );
+        std::ifstream unpackedFile( outpath );
+
+        if( ( !originFile.is_open() ) || ( !unpackedFile.is_open() ) ) {
+
+            throw std::runtime_error( "cant open files for testing" );
+
+        } else {
+
+
+            std::string orig_str;
+            std::string unpack_str;
+
+            while( !originFile.eof() ) {
+
+                std::getline( originFile, orig_str );
+                std::getline( unpackedFile, unpack_str );
+
+                ASSERT_EQ( orig_str, unpack_str );
+
+
+            }
+
+        }
+    }
+}
+
+TEST( ReaderTests, randomType_StandartProt_CorrectValues ) {
+
+    std::map< int, string > files;
+    files[ 0 ] = "twenty_enter";
+    files[ 1 ] = "empty";
+    files[ 2 ] = "one_sym";
+    files[ 3 ] = "rand_lines";
+    files[ 4 ] = "rand_sym";
+    for( const auto& cases : files ) {
+
+        DataRead obj;
+        // std::cerr << "test\t" << cases.first << "\n";
+
+        std::string inpath = "reader/bin/toRead/packed/random/" + cases.second + "/Std.txt";
+        std::string outpath = "reader/bin/toRead/unpacked/random/" + cases.second + "/Std.txt";
+        std::string origpath = "reader/bin/toPack/" + cases.second + ".txt";
+
+        obj.read_processing( inpath, outpath );
+
+
+        std::ifstream originFile(  origpath );
+        std::ifstream unpackedFile( outpath );
+
+        if( ( !originFile.is_open() ) || ( !unpackedFile.is_open() ) ) {
+
+            throw std::runtime_error( "cant open files for testing" );
+
+        } else {
+
+
+            std::string orig_str;
+            std::string unpack_str;
+
+            while( !originFile.eof() ) {
+
+                std::getline( originFile, orig_str );
+                std::getline( unpackedFile, unpack_str );
+
+                ASSERT_EQ( orig_str, unpack_str );
+
+
+            }
+
+        }
+    }
+}
+
+TEST( ReaderTests, randomType_MagicProt_CorrectValues ) {
+
+    std::map< int, string > files;
+    files[ 0 ] = "twenty_enter";
+    files[ 1 ] = "empty";
+    files[ 2 ] = "one_sym";
+    files[ 3 ] = "rand_lines";
+    files[ 4 ] = "rand_sym";
+    for( const auto& cases : files ) {
+
+        DataRead obj;
+        // std::cerr << "test\t" << cases.first << "\n";
+
+        std::string inpath = "reader/bin/toRead/packed/random/" + cases.second + "/Mag.txt";
+        std::string outpath = "reader/bin/toRead/unpacked/random/" + cases.second + "/Mag.txt";
+        std::string origpath = "reader/bin/toPack/" + cases.second + ".txt";
+
+        obj.read_processing( inpath, outpath );
+
+
+        std::ifstream originFile(  origpath );
+        std::ifstream unpackedFile( outpath );
+
+        if( ( !originFile.is_open() ) || ( !unpackedFile.is_open() ) ) {
+
+            throw std::runtime_error( "cant open files for testing" );
+
+        } else {
+
+
+            std::string orig_str;
+            std::string unpack_str;
+
+            while( !originFile.eof() ) {
+
+                std::getline( originFile, orig_str );
+                std::getline( unpackedFile, unpack_str );
+
+                ASSERT_EQ( orig_str, unpack_str );
+
+
+            }
+
+        }
+    }
+}
+
+TEST( ReaderTests, randomType_StandartProtMIX_CorrectValues ) {
+
+    std::map< int, string > files;
+    files[ 0 ] = "twenty_enter";
+    files[ 1 ] = "empty";
+    files[ 2 ] = "one_sym";
+    files[ 3 ] = "rand_lines";
+    files[ 4 ] = "rand_sym";
+    for( const auto& cases : files ) {
+
+        DataRead obj;
+        // std::cerr << "test\t" << cases.first << "\n";
+
+        std::string inpath = "reader/bin/toRead/packed/random/" + cases.second + "/Std_MIX.txt";
+        std::string outpath = "reader/bin/toRead/unpacked/random/" + cases.second + "/Std_MIX.txt";
+        std::string origpath = "reader/bin/toPack/" + cases.second + ".txt";
+
+        obj.read_processing( inpath, outpath );
+
+
+        std::ifstream originFile(  origpath );
+        std::ifstream unpackedFile( outpath );
+
+        if( ( !originFile.is_open() ) || ( !unpackedFile.is_open() ) ) {
+
+            throw std::runtime_error( "cant open files for testing" );
+
+        } else {
+
+
+            std::string orig_str;
+            std::string unpack_str;
+
+            while( !originFile.eof() ) {
+
+                std::getline( originFile, orig_str );
+                std::getline( unpackedFile, unpack_str );
+
+                ASSERT_EQ( orig_str, unpack_str );
+
+
+            }
+
+        }
+    }
+}
+
+TEST( ReaderTests, randomType_MagicProtMIX_CorrectValues ) {
+
+    std::map< int, string > files;
+    files[ 0 ] = "twenty_enter";
+    files[ 1 ] = "empty";
+    files[ 2 ] = "one_sym";
+    files[ 3 ] = "rand_lines";
+    files[ 4 ] = "rand_sym";
+    for( const auto& cases : files ) {
+
+        DataRead obj;
+        // std::cerr << "test\t" << cases.first << "\n";
+
+        std::string inpath = "reader/bin/toRead/packed/random/" + cases.second + "/Mag_MIX.txt";
+        std::string outpath = "reader/bin/toRead/unpacked/random/" + cases.second + "/Mag_MIX.txt";
+        std::string origpath = "reader/bin/toPack/" + cases.second + ".txt";
+
+        obj.read_processing( inpath, outpath );
+
+
+        std::ifstream originFile(  origpath );
+        std::ifstream unpackedFile( outpath );
+
+        if( ( !originFile.is_open() ) || ( !unpackedFile.is_open() ) ) {
+
+            throw std::runtime_error( "cant open files for testing" );
+
+        } else {
+
+
+            std::string orig_str;
+            std::string unpack_str;
+
+            while( !originFile.eof() ) {
+
+                std::getline( originFile, orig_str );
+                std::getline( unpackedFile, unpack_str );
+
+                ASSERT_EQ( orig_str, unpack_str );
+
+
+            }
+
+        }
+    }
+}
+
+/*
+   TEST( ReaderTests, alignedType_StandartProtMIX_CorrectValues ) {
 
     DataRead obj;
     std::string inpath = "reader/aligned/packed/Std_MIX.txt";
@@ -56,7 +412,7 @@ TEST( ReaderTests, Alig_Std_MIX ) {
 
     if( ( !originFile.is_open() ) || ( !unpackedFile.is_open() ) ) {
 
-        throw std::runtime_error( "cant open file " );
+        throw std::runtime_error( "cant open files for testing" );
 
     } else {
 
@@ -76,9 +432,9 @@ TEST( ReaderTests, Alig_Std_MIX ) {
 
     }
 
-}
+   }
 
-TEST( ReaderTests, Alig_Mag ) {
+   TEST( ReaderTests, alignedType_MagicProt_CorrectValues ) {
 
     DataRead obj;
     std::string inpath = "reader/aligned/packed/Mag.txt";
@@ -91,7 +447,7 @@ TEST( ReaderTests, Alig_Mag ) {
 
     if( ( !originFile.is_open() ) || ( !unpackedFile.is_open() ) ) {
 
-        throw std::runtime_error( "cant open file " );
+        throw std::runtime_error( "cant open files for testing" );
 
     } else {
 
@@ -111,9 +467,9 @@ TEST( ReaderTests, Alig_Mag ) {
 
     }
 
-}
+   }
 
-TEST( ReaderTests, Alig_Mag_MIX ) {
+   TEST( ReaderTests, alignedType_MagicProtMIX_CorrectValues  ) {
 
     DataRead obj;
     std::string inpath = "reader/aligned/packed/Mag_MIX.txt";
@@ -126,7 +482,7 @@ TEST( ReaderTests, Alig_Mag_MIX ) {
 
     if( ( !originFile.is_open() ) || ( !unpackedFile.is_open() ) ) {
 
-        throw std::runtime_error( "cant open file " );
+        throw std::runtime_error( "cant open files for testing" );
 
     } else {
 
@@ -146,9 +502,9 @@ TEST( ReaderTests, Alig_Mag_MIX ) {
 
     }
 
-}
+   }
 
-TEST( ReaderTests, Rand_Std ) {
+   TEST( ReaderTests, randomType_StandartProt_CorrectValues ) {
 
     DataRead obj;
     std::string inpath = "reader/random/packed/Std.txt";
@@ -162,7 +518,7 @@ TEST( ReaderTests, Rand_Std ) {
 
     if( ( !originFile.is_open() ) || ( !unpackedFile.is_open() ) ) {
 
-        throw std::runtime_error( "cant open file " );
+        throw std::runtime_error( "cant open files for testing" );
 
     } else {
 
@@ -182,9 +538,9 @@ TEST( ReaderTests, Rand_Std ) {
 
     }
 
-}
+   }
 
-TEST( ReaderTests, Rand_Std_MIX ) {
+   TEST( ReaderTests, randomType_StandartProtMIX_CorrectValues  ) {
 
     DataRead obj;
     std::string inpath = "reader/random/packed/Std_MIX.txt";
@@ -198,7 +554,8 @@ TEST( ReaderTests, Rand_Std_MIX ) {
 
     if( ( !originFile.is_open() ) || ( !unpackedFile.is_open() ) ) {
 
-        throw std::runtime_error( "cant open file " );
+
+        throw std::runtime_error( "cant open files for testing" );
 
     } else {
 
@@ -218,9 +575,9 @@ TEST( ReaderTests, Rand_Std_MIX ) {
 
     }
 
-}
+   }
 
-TEST( ReaderTests, Rand_Mag ) {
+   TEST( ReaderTests, randomType_MagicProt_CorrectValues ) {
 
     DataRead obj;
     std::string inpath = "reader/random/packed/Mag.txt";
@@ -234,7 +591,7 @@ TEST( ReaderTests, Rand_Mag ) {
 
     if( ( !originFile.is_open() ) || ( !unpackedFile.is_open() ) ) {
 
-        throw std::runtime_error( "cant open file " );
+        throw std::runtime_error( "cant open files for testing" );
 
     } else {
 
@@ -254,9 +611,9 @@ TEST( ReaderTests, Rand_Mag ) {
 
     }
 
-}
+   }
 
-TEST( ReaderTests, Rand_Mag_MIX ) {
+   TEST( ReaderTests, randomType_MagicProtMIX_CorrectValues ) {
 
     DataRead obj;
     std::string inpath = "reader/random/packed/Mag_MIX.txt";
@@ -270,7 +627,7 @@ TEST( ReaderTests, Rand_Mag_MIX ) {
 
     if( ( !originFile.is_open() ) || ( !unpackedFile.is_open() ) ) {
 
-        throw std::runtime_error( "cant open file " );
+        throw std::runtime_error( "cant open files for testing" );
 
     } else {
 
@@ -290,4 +647,5 @@ TEST( ReaderTests, Rand_Mag_MIX ) {
 
     }
 
-}
+   }
+ */

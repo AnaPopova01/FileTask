@@ -16,7 +16,7 @@ class DataRead {
 
 public:
 
-
+    // void setMaxPacketSize( const uint16_t size ); // without test
     void read_processing( const string& inputfile, const string& outputfile );
 
 private:
@@ -24,21 +24,15 @@ private:
 
     void getProtInfo();
     void divideHeadFromInfo();
-    void isMixed();
-    void cleanData();
     void printData();
     void printPack();
 
-
-
     // protocol
-    uint16_t N = 50; // max length of packet
     bool stdProt = 1;
     bool mixFlag = 0;
+    uint16_t N = 50; // max length of packet
 
     std::ofstream outfile;
-    std::ifstream infile;
-
     string data;
     uint8_t k_in_data = 4; // кол-во символов для кодирования порядкового номера символа в строке
     uint8_t headerSize = 4;
@@ -48,9 +42,8 @@ private:
 
     std::map< std::int16_t, string > strdata;
 
-    uint16_t numCurrSym = 0;
     uint16_t kOfPackets = 0;
-    bool nextStr = 0;
+
 };
 
 

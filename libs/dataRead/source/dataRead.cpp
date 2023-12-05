@@ -11,14 +11,14 @@ void DataRead::read_processing( const string& inputfile, const string& outputfil
     std::ifstream originFile( inputfile, std::ios::binary ); // open file with origin data
 
     if( !originFile.is_open() ) {
-        throw std::runtime_error( "cant open INPUT file " );
+        throw std::runtime_error( "cant open input reader file" );
 
     } else {
 
         outfile.open( outputfile, std::ios::binary );
         if( !outfile.is_open() ) {
 
-            throw std::runtime_error( "cant open OUTPUT file " );
+            throw std::runtime_error( "cant open output reader file" );
 
         } else {
 
@@ -67,17 +67,17 @@ void DataRead::getProtInfo() {
 void DataRead::divideHeadFromInfo() {
 
     // есть одна большая строка данных, в зависимости от вида протокола разделяем хедер и данные и записываем их в map
-    // если Стд: берем первые 50, из них первые 4 вырезаем и ту инт и добавляем их в качестве ключа, а остаток строки в вэлью мап, и так пока размер строки не равен нулю
-    // если Маг: стираем кей-хедер, копируем от начала до следующего кей-хедера, первые 4 ту инт и в ключ, стираем сайз а остальное в вэлью мап, и так до размера даты ==0
+    // если Стд: берем первые N, из них первые 4 вырезаем и ту инт и добавляем их в качестве ключа, а остаток строки в map.value , и так пока размер строки не равен нулю
+    // если Маг: стираем keyword, копируем от начала до следующего keyword, первые 4 ту инт и в ключ, стираем сайз а остальное в map.value, и так до data.size ==0
 
     if( stdProt == true ) {
 
         while( data.size() != 1 ) {
 
-            std::string str = data.substr( 0, 50 );
+            std::string str = data.substr( 0, N );
             // std::cerr << str << "\n";
             std::string cleandata;
-            data.erase( 0, 50 );
+            data.erase( 0, N );
             uint16_t id = stoi( str.substr( 0, headerSize ) );
             str.erase( 0, headerSize );
             for( uint16_t i = 0; i <  str.size() / ( k_in_data + 1 ); i++ ) {
@@ -115,50 +115,9 @@ void DataRead::divideHeadFromInfo() {
     }
 
 }
-// auto size = strdata.size();
-// std::string str1;
-// std::string str2;
-// uint16_t a = 0;
-// if( stdProt == false ) {
-
-// a = 4;
-// }
-// for( uint16_t i = 0; i < size; i++ ) {
-
-// str1 = strdata[ i ];
-// str2.assign( str1, 0 + a, headerSize - 2 * a );
-//// intdata.push_back( std::stoi( str2 ) );
-// str1.erase( 0, headerSize );
-// strdata[ i ] = str1;
-// }
 
 
-/*
-   void DataRead::isMixed() {
 
-    for( uint16_t i = 0; i < intdata.size(); i++ ) {
-
-        if( intdata[ i ] != i ) {
-
-            mixFlag = true;
-            break;
-        }
-    }
-   }
- */
-
-// void DataRead::cleanData() {
-
-// std::string str = "";
-
-// for( uint16_t i = 0; i < strdata.size(); i++ ) {
-
-// str = strdata[ i ];
-// auto pos = str.find( "&" );
-// str.erase( pos, str.size() );
-// strdata[ i ] = str;
-// }
-// }
 
 void DataRead::printData() {
 
@@ -180,9 +139,7 @@ void DataRead::printPack() {
 
     for( uint16_t nline = 0; nline < strdata.size(); nline++ ) {
         int count = 0;
-// if( nline == 31 ) {
-// std::cerr << "stop";
-// }
+
 
         while( strdata[ nline ].size() != 0 ) {
 
@@ -208,6 +165,18 @@ void DataRead::printPack() {
     }
 }
 
+// void DataRead::setMaxPacketSize( const uint16_t size ) {
+
+// if( size == 0 ) {
+// throw std::runtime_error( "max size of packed cant be equal 0" );
+
+// }
+// if( size < ( 12 + 1 ) ) {
+// throw std::runtime_error( "max size of packed cant be less than header size + service_symbols in data" );
+
+// }
+// this->N = size;
+// }
 
 // open file
 // read first two strings

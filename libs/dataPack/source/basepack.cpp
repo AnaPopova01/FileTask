@@ -14,14 +14,14 @@ void BaseImpl::pack_processing( const std::string& inputfile, const std::string&
 
     if( !originFile.is_open() ) {
 
-        throw std::runtime_error( "cant open INPUT file " );
+        throw std::runtime_error( "cant open input packer file" );
 
     } else {
 
         this->outfile.open( outputfile, std::ios::binary ); // open file to write
         if( !outfile.is_open() ) {
 
-            throw std::runtime_error( "cant open OUTPUT file " );
+            throw std::runtime_error( "cant open output packer file " );
 
         } else {
 

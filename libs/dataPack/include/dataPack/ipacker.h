@@ -11,20 +11,15 @@ enum class PackerType : uint32_t { Aligned = 0, Random = 1 };
 
 
 struct Protocol {
-
     ProtocolType type;
     uint16_t N; // max length of packet
     bool mixPackets { false };
 };
 
 
-
 class IPacker {
 public:
-
-
     virtual void pack_processing( const std::string& inputfile, const std::string& outputfile, Protocol& prot ) = 0;
-
 };
 
 

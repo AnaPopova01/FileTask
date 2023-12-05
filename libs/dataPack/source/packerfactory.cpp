@@ -59,7 +59,7 @@ std::unique_ptr< IPacker > createPackerImpl() {
         ret = std::make_unique< BaseImpl >( PackerType::Random );
         break;
     default:
-        throw std::runtime_error( " unsupported printer type " + std::to_string( static_cast< int >( type ) ) );
+        throw std::runtime_error( " unsupported packer type " + std::to_string( static_cast< int >( type ) ) );
         break;
     }
 
@@ -78,7 +78,7 @@ std::unique_ptr< IPacker > createPackerImpl( PackerType type ) {
         ret = std::make_unique< BaseImpl >( PackerType::Random );
         break;
     default:
-        throw std::runtime_error( " unsupported printer type " + std::to_string( static_cast< int >( type ) ) );
+        throw std::runtime_error( " unsupported packer type " );
         break;
     }
 
