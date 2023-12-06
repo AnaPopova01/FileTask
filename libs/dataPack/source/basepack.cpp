@@ -6,7 +6,7 @@ BaseImpl::BaseImpl( PackerType type ) {
     this->pack_type = type;
 }
 
-void BaseImpl::pack_processing( const std::string& inputfile, const std::string& outputfile, Protocol& protocol ) {
+void BaseImpl::packProcessing( const std::string& inputfile, const std::string& outputfile, Protocol& protocol ) {
 
     setProtocol( protocol );
 
@@ -40,7 +40,6 @@ void BaseImpl::pack_processing( const std::string& inputfile, const std::string&
             data.erase( data.size() - 1, 1 );
             // std::cerr << "amount sym in origdata = " << count - 1 << "\n";
             // std::cerr << "the last = " << value << "\n"; // это пробел
-
 
             if( prot.type == ProtocolType::Standart ) {
 

@@ -19,7 +19,7 @@ struct Protocol {
 
 class IPacker {
 public:
-    virtual void pack_processing( const std::string& inputfile, const std::string& outputfile, Protocol& prot ) = 0;
+    virtual void packProcessing( const std::string& inputfile, const std::string& outputfile, Protocol& prot ) = 0;
 };
 
 

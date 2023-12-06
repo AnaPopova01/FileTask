@@ -18,10 +18,10 @@ int main() {
     const string packed = "/home/ann/WORK/work_qt/StringCoder/FilesAndStrings/bin/packed_lolol.txt";
     const string toRead = "/home/ann/WORK/work_qt/StringCoder/FilesAndStrings/bin/unpacked_lolol.txt";
 
-    tatus->pack_processing( toPack, packed, prot );
+    tatus->packProcessing( toPack, packed, prot );
 
     DataRead reader;
-    reader.read_processing( packed, toRead );
+    reader.readProcessing( packed, toRead );
 
 }
 

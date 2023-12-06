@@ -17,7 +17,7 @@ class DataRead {
 public:
 
     // void setMaxPacketSize( const uint16_t size ); // without test
-    void read_processing( const string& inputfile, const string& outputfile );
+    void readProcessing( const string& inputfile, const string& outputfile );
 
 private:
 

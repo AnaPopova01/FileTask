@@ -23,7 +23,7 @@ TEST( PackerTests, bothType_wrongInputPath_runtimeError ) {
 
         const string inputfile = "samuraiway.noAim";
         const string outputfile = "packer/aligned/Std.txt";
-        tatus->pack_processing( inputfile, outputfile, prot );
+        tatus->packProcessing( inputfile, outputfile, prot );
 
     } catch( std::runtime_error& e ) {
 
@@ -33,22 +33,22 @@ TEST( PackerTests, bothType_wrongInputPath_runtimeError ) {
 
 }
 
-TEST( PackerTests, sizeOfPacket ) {
-    try {
-        auto tatus = createPackerImpl( PackerType::Aligned );
-        Protocol prot { ProtocolType::Standart,  0, 0 };
+// TEST( PackerTests, sizeOfPacket ) {
+// try {
+// auto tatus = createPackerImpl( PackerType::Aligned );
+// Protocol prot { ProtocolType::Standart,  0, 0 };
 
-        const string inputfile = "samuraiway.noAim";
-        const string outputfile = "packer/aligned/Std.txt";
-        tatus->pack_processing( inputfile, outputfile, prot );
+// const string inputfile = "samuraiway.noAim";
+// const string outputfile = "packer/aligned/Std.txt";
+// tatus->packProcessing( inputfile, outputfile, prot );
 
-    } catch( std::runtime_error& e ) {
+// } catch( std::runtime_error& e ) {
 
-        ASSERT_STREQ( e.what(),  "cant input packer file" );
+// ASSERT_STREQ( e.what(),  "cant input packer file" );
 
-    }
+// }
 
-}
+// }
 
 TEST( PackerTests, alignedType_StandartProt_CorrectValues ) {
 
@@ -66,7 +66,7 @@ TEST( PackerTests, alignedType_StandartProt_CorrectValues ) {
         const string inputfile = "packer/bin/toPack/" + cases.second + ".txt";
 
         const string outputfile = "packer/bin/toRead/packed/aligned/" + cases.second + "/Std.txt";
-        tatus->pack_processing( inputfile, outputfile, prot );
+        tatus->packProcessing( inputfile, outputfile, prot );
 
 
         const string idealPath = "packer/bin/toRead/ideal_packed/aligned/" + cases.second + "/Std.txt";
@@ -115,7 +115,7 @@ TEST( PackerTests, alignedType_MagicProt_CorrectValues ) {
         const string inputfile = "packer/bin/toPack/" + cases.second + ".txt";
 
         const string outputfile = "packer/bin/toRead/packed/aligned/" + cases.second + "/Mag.txt";
-        tatus->pack_processing( inputfile, outputfile, prot );
+        tatus->packProcessing( inputfile, outputfile, prot );
 
         const string idealPath = "packer/bin/toRead/ideal_packed/aligned/" + cases.second + "/Mag.txt";
 
@@ -162,7 +162,7 @@ TEST( PackerTests, alignedType_StandartProtMIX_CorrectValues ) {
         const string inputfile = "packer/bin/toPack/" + cases.second + ".txt";
 
         const string outputfile = "packer/bin/toRead/packed/aligned/" + cases.second + "/Std_MIX.txt";
-        tatus->pack_processing( inputfile, outputfile, prot );
+        tatus->packProcessing( inputfile, outputfile, prot );
 
         const string idealPath = "packer/bin/toRead/ideal_packed/aligned/" + cases.second + "/Std_MIX.txt";
 
@@ -211,7 +211,7 @@ TEST( PackerTests, alignedType_MagicProtMIX_CorrectValues  ) {
         const string inputfile = "packer/bin/toPack/" + cases.second + ".txt";
 
         const string outputfile = "packer/bin/toRead/packed/aligned/" + cases.second + "/Mag_MIX.txt";
-        tatus->pack_processing( inputfile, outputfile, prot );
+        tatus->packProcessing( inputfile, outputfile, prot );
 
         const string idealPath = "packer/bin/toRead/ideal_packed/aligned/" + cases.second + "/Mag_MIX.txt";
 
@@ -259,7 +259,7 @@ TEST( PackerTests, randomType_StandartProt_CorrectValues ) {
         const string inputfile = "packer/bin/toPack/" + cases.second + ".txt";
 
         const string outputfile = "packer/bin/toRead/packed/random/" + cases.second + "/Std.txt";
-        tatus->pack_processing( inputfile, outputfile, prot );
+        tatus->packProcessing( inputfile, outputfile, prot );
 
         const string idealPath = "packer/bin/toRead/ideal_packed/random/" + cases.second + "/Std.txt";
 
@@ -306,7 +306,7 @@ TEST( PackerTests, randomType_MagicProt_CorrectValues ) {
         const string inputfile = "packer/bin/toPack/" + cases.second + ".txt";
 
         const string outputfile = "packer/bin/toRead/packed/random/" + cases.second + "/Mag.txt";
-        tatus->pack_processing( inputfile, outputfile, prot );
+        tatus->packProcessing( inputfile, outputfile, prot );
 
         const string idealPath = "packer/bin/toRead/ideal_packed/random/" + cases.second + "/Mag.txt";
 
@@ -353,7 +353,7 @@ TEST( PackerTests, randomType_StandartProtMIX_CorrectValues ) {
         const string inputfile = "packer/bin/toPack/" + cases.second + ".txt";
 
         const string outputfile = "packer/bin/toRead/packed/random/" + cases.second + "/Std_MIX.txt";
-        tatus->pack_processing( inputfile, outputfile, prot );
+        tatus->packProcessing( inputfile, outputfile, prot );
 
         const string idealPath = "packer/bin/toRead/ideal_packed/random/" + cases.second + "/Std_MIX.txt";
 
@@ -402,7 +402,7 @@ TEST( PackerTests, randomType_MagicProt_MIX_CorrectValues ) {
         const string inputfile = "packer/bin/toPack/" + cases.second + ".txt";
 
         const string outputfile = "packer/bin/toRead/packed/random/" + cases.second + "/Mag_MIX.txt";
-        tatus->pack_processing( inputfile, outputfile, prot );
+        tatus->packProcessing( inputfile, outputfile, prot );
 
         const string idealPath = "packer/bin/toRead/ideal_packed/random/" + cases.second + "/Mag_MIX.txt";
 

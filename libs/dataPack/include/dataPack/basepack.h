@@ -13,7 +13,7 @@ class BaseImpl: public IPacker {
 public:
 
     BaseImpl( PackerType type );
-    void pack_processing( const std::string& inputfile, const std::string& outputfile, Protocol& prot ) override final;
+    void packProcessing( const std::string& inputfile, const std::string& outputfile, Protocol& prot ) override final;
 
 
 protected:

@@ -9,7 +9,7 @@ TEST( PackerTests, reader_wrongInputPath_runtimeError ) {
         const string inpath = "samuraiway.noAim";
         const string outpath = "reader/bin/toRead/unpacked/aligned/empty/Std.txt";
 
-        obj.read_processing( inpath, outpath );
+        obj.readProcessing( inpath, outpath );
 
 
 
@@ -38,7 +38,7 @@ TEST( ReaderTests, alignedType_StandartProt_CorrectValues ) {
         std::string outpath = "reader/bin/toRead/unpacked/aligned/" + cases.second + "/Std.txt";
         std::string origpath = "reader/bin/toPack/" + cases.second + ".txt";
 
-        obj.read_processing( inpath, outpath );
+        obj.readProcessing( inpath, outpath );
 
 
         std::ifstream originFile(  origpath );
@@ -85,7 +85,7 @@ TEST( ReaderTests, alignedType_MagicProt_CorrectValues ) {
         std::string outpath = "reader/bin/toRead/unpacked/aligned/" + cases.second + "/Mag.txt";
         std::string origpath = "reader/bin/toPack/" + cases.second + ".txt";
 
-        obj.read_processing( inpath, outpath );
+        obj.readProcessing( inpath, outpath );
 
 
         std::ifstream originFile(  origpath );
@@ -132,7 +132,7 @@ TEST( ReaderTests, alignedType_StandartProtMIX_CorrectValues ) {
         std::string outpath = "reader/bin/toRead/unpacked/aligned/" + cases.second + "/Std_MIX.txt";
         std::string origpath = "reader/bin/toPack/" + cases.second + ".txt";
 
-        obj.read_processing( inpath, outpath );
+        obj.readProcessing( inpath, outpath );
 
 
         std::ifstream originFile(  origpath );
@@ -179,7 +179,7 @@ TEST( ReaderTests, alignedType_MagicProtMIX_CorrectValues ) {
         std::string outpath = "reader/bin/toRead/unpacked/aligned/" + cases.second + "/Mag_MIX.txt";
         std::string origpath = "reader/bin/toPack/" + cases.second + ".txt";
 
-        obj.read_processing( inpath, outpath );
+        obj.readProcessing( inpath, outpath );
 
 
         std::ifstream originFile(  origpath );
@@ -226,7 +226,7 @@ TEST( ReaderTests, randomType_StandartProt_CorrectValues ) {
         std::string outpath = "reader/bin/toRead/unpacked/random/" + cases.second + "/Std.txt";
         std::string origpath = "reader/bin/toPack/" + cases.second + ".txt";
 
-        obj.read_processing( inpath, outpath );
+        obj.readProcessing( inpath, outpath );
 
 
         std::ifstream originFile(  origpath );
@@ -273,7 +273,7 @@ TEST( ReaderTests, randomType_MagicProt_CorrectValues ) {
         std::string outpath = "reader/bin/toRead/unpacked/random/" + cases.second + "/Mag.txt";
         std::string origpath = "reader/bin/toPack/" + cases.second + ".txt";
 
-        obj.read_processing( inpath, outpath );
+        obj.readProcessing( inpath, outpath );
 
 
         std::ifstream originFile(  origpath );
@@ -320,7 +320,7 @@ TEST( ReaderTests, randomType_StandartProtMIX_CorrectValues ) {
         std::string outpath = "reader/bin/toRead/unpacked/random/" + cases.second + "/Std_MIX.txt";
         std::string origpath = "reader/bin/toPack/" + cases.second + ".txt";
 
-        obj.read_processing( inpath, outpath );
+        obj.readProcessing( inpath, outpath );
 
 
         std::ifstream originFile(  origpath );
@@ -367,7 +367,7 @@ TEST( ReaderTests, randomType_MagicProtMIX_CorrectValues ) {
         std::string outpath = "reader/bin/toRead/unpacked/random/" + cases.second + "/Mag_MIX.txt";
         std::string origpath = "reader/bin/toPack/" + cases.second + ".txt";
 
-        obj.read_processing( inpath, outpath );
+        obj.readProcessing( inpath, outpath );
 
 
         std::ifstream originFile(  origpath );
