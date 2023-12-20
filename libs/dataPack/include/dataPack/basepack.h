@@ -3,7 +3,7 @@
 #include <string>
 #include <fstream>
 #include "ipacker.h"
-
+#include <math.h>
 #include <map>
 #include <vector>
 #include <iostream>
@@ -12,22 +12,20 @@ class BaseImpl: public IPacker {
 
 public:
 
-    BaseImpl( PackerType type );
-    void packProcessing( const std::string& inputfile, const std::string& outputfile, Protocol& prot ) override final;
+    void packProcessing( const std::string& inputfile, const std::string& outputfile, Protocol& prot );
 
 
 protected:
 
-
-    PackerType pack_type;
-    Protocol prot { ProtocolType::Standart,  50, 0 };
+    PackerType type;
+    Protocol prot;
 
     // размер служебных полей
     uint8_t headerSize = 0;
     uint8_t k_in_1stHead = 4; // кол-во символов для кодирования порядкового номера пакета
     uint8_t k_in_2ndHead = 4; // кол-во символов для кодирования длины пакета
-    uint8_t k_in_data = 4; // кол-во символов для кодирования порядкового номера символа в строке
-    unsigned int keyword = 0xDED;
+    uint8_t serviceDataFieldLen = 4; // кол-во символов для кодирования порядкового номера символа в строке
+
 
     std::ofstream outfile; // path to file for writing data
 
@@ -40,15 +38,21 @@ protected:
     std::string data = ""; // данные без заголовка
 
     std::vector< std::string > vecdata; // вектор пакетов для их перемешивания
+    std::map< std::uint16_t, std::string > strdata;
+
+    std::map< std::uint16_t, std::string > futureData;
+
+    void readFromFile( const std::string& inputfile );
+    virtual void writeToFile( const std::string& outputfile ) = 0;
 
     void formPack();
     void addInfo(); //
-    void addHeadInfo( std::string& str ); // заголовок печатается отдельно от данных
+    virtual void addHeadInfo( std::string& str ) = 0; // заголовок печатается отдельно от данных
     void nextPacket();
     void resetPackSpace( uint16_t newSpace );
-    void resetPackSpace();
-    void setProtocol( Protocol& protocol );
-    void finishPack( std::string& str ); //
+    void  resetPackSpace();
+    virtual void setProtocol( Protocol& protocol ) = 0;
+    virtual void finishPack( std::string& str ) = 0; //
     void setkOfSym( uint16_t newK  );
     void printvecdata();
     void printString( std::string& str );

@@ -24,12 +24,15 @@ add_executable(FilesAndStrings main.cpp)
 add_subdirectory(libs/dataGen)
 add_subdirectory(libs/dataPack)
 add_subdirectory(libs/dataRead)
+add_subdirectory(libs/threadPool)
 
 target_link_libraries(${PROJECT_NAME} dataGen)
 
 target_link_libraries(${PROJECT_NAME} dataPack)
 
 target_link_libraries(${PROJECT_NAME} dataRead)
+
+target_link_libraries(${PROJECT_NAME} threadPool)
 
 install(TARGETS FilesAndStrings
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})

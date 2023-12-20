@@ -1,5 +1,7 @@
 #include <gtest/gtest.h>
 #include "dataPack/packerfactory.h"
+// #include "libs/dataRead/include/dataRead/dataRead.h"
+
 using std::string;
 
 
@@ -7,7 +9,7 @@ TEST( PackerTests, packer_creatingWrongType_runtimeError ) {
 
     PackerType type{ 2 };
     try {
-        auto tatus = createPackerImpl( type );
+        auto tatus = createPackerImpl( type, ProtocolType::Standart );
     } catch( std::runtime_error& e ) {
 
         ASSERT_STREQ( e.what(),  " unsupported packer type " );
@@ -18,8 +20,8 @@ TEST( PackerTests, packer_creatingWrongType_runtimeError ) {
 
 TEST( PackerTests, bothType_wrongInputPath_runtimeError ) {
     try {
-        auto tatus = createPackerImpl( PackerType::Aligned );
-        Protocol prot { ProtocolType::Standart,  50, 0 };
+        auto tatus = createPackerImpl( PackerType::Aligned, ProtocolType::Standart );
+        Protocol prot {  50, 0 };
 
         const string inputfile = "samuraiway.noAim";
         const string outputfile = "packer/aligned/Std.txt";
@@ -61,8 +63,9 @@ TEST( PackerTests, alignedType_StandartProt_CorrectValues ) {
 
     for( const auto& cases : files ) {
 
-        auto tatus = createPackerImpl( PackerType::Aligned );
-        Protocol prot { ProtocolType::Standart,  50, 0 };
+        std::cerr << "case = " << cases.second << endl;
+        auto tatus = createPackerImpl( PackerType::Aligned, ProtocolType::Standart );
+        Protocol prot {   50, 0 };
         const string inputfile = "packer/bin/toPack/" + cases.second + ".txt";
 
         const string outputfile = "packer/bin/toRead/packed/aligned/" + cases.second + "/Std.txt";
@@ -110,8 +113,8 @@ TEST( PackerTests, alignedType_MagicProt_CorrectValues ) {
 
     for( const auto& cases : files ) {
 
-        auto tatus = createPackerImpl( PackerType::Aligned );
-        Protocol prot { ProtocolType::Magic,  50, 0 };
+        auto tatus = createPackerImpl( PackerType::Aligned, ProtocolType::Magic );
+        Protocol prot { 50, 0 };
         const string inputfile = "packer/bin/toPack/" + cases.second + ".txt";
 
         const string outputfile = "packer/bin/toRead/packed/aligned/" + cases.second + "/Mag.txt";
@@ -148,6 +151,7 @@ TEST( PackerTests, alignedType_MagicProt_CorrectValues ) {
 
 TEST( PackerTests, alignedType_StandartProtMIX_CorrectValues ) {
 
+
     std::map< std::uint8_t, string > files;
     files[ 0 ] = "twenty_enter";
     files[ 1 ] = "empty";
@@ -157,8 +161,9 @@ TEST( PackerTests, alignedType_StandartProtMIX_CorrectValues ) {
 
     for( const auto& cases : files ) {
 
-        auto tatus = createPackerImpl( PackerType::Aligned );
-        Protocol prot { ProtocolType::Standart,  50, 1 };
+        // std::cerr << "case = " << cases.second << endl;
+        auto tatus = createPackerImpl( PackerType::Aligned, ProtocolType::Standart );
+        Protocol prot {  50, 1 };
         const string inputfile = "packer/bin/toPack/" + cases.second + ".txt";
 
         const string outputfile = "packer/bin/toRead/packed/aligned/" + cases.second + "/Std_MIX.txt";
@@ -206,8 +211,8 @@ TEST( PackerTests, alignedType_MagicProtMIX_CorrectValues  ) {
 
     for( const auto& cases : files ) {
 
-        auto tatus = createPackerImpl( PackerType::Aligned );
-        Protocol prot { ProtocolType::Magic,  50, 1 };
+        auto tatus = createPackerImpl( PackerType::Aligned, ProtocolType::Magic );
+        Protocol prot {  50, 1 };
         const string inputfile = "packer/bin/toPack/" + cases.second + ".txt";
 
         const string outputfile = "packer/bin/toRead/packed/aligned/" + cases.second + "/Mag_MIX.txt";
@@ -254,8 +259,8 @@ TEST( PackerTests, randomType_StandartProt_CorrectValues ) {
 
     for( const auto& cases : files ) {
 
-        auto tatus = createPackerImpl( PackerType::Random );
-        Protocol prot { ProtocolType::Standart,  50, 0 };
+        auto tatus = createPackerImpl( PackerType::Random, ProtocolType::Standart );
+        Protocol prot {  50, 0 };
         const string inputfile = "packer/bin/toPack/" + cases.second + ".txt";
 
         const string outputfile = "packer/bin/toRead/packed/random/" + cases.second + "/Std.txt";
@@ -301,8 +306,8 @@ TEST( PackerTests, randomType_MagicProt_CorrectValues ) {
 
     for( const auto& cases : files ) {
 
-        auto tatus = createPackerImpl( PackerType::Random );
-        Protocol prot { ProtocolType::Magic,  50, 0 };
+        auto tatus = createPackerImpl( PackerType::Random, ProtocolType::Magic );
+        Protocol prot { 50, 0 };
         const string inputfile = "packer/bin/toPack/" + cases.second + ".txt";
 
         const string outputfile = "packer/bin/toRead/packed/random/" + cases.second + "/Mag.txt";
@@ -348,8 +353,8 @@ TEST( PackerTests, randomType_StandartProtMIX_CorrectValues ) {
 
     for( const auto& cases : files ) {
 
-        auto tatus = createPackerImpl( PackerType::Random );
-        Protocol prot { ProtocolType::Standart,  50, 1 };
+        auto tatus = createPackerImpl( PackerType::Random, ProtocolType::Standart );
+        Protocol prot {   50, 1 };
         const string inputfile = "packer/bin/toPack/" + cases.second + ".txt";
 
         const string outputfile = "packer/bin/toRead/packed/random/" + cases.second + "/Std_MIX.txt";
@@ -397,8 +402,8 @@ TEST( PackerTests, randomType_MagicProt_MIX_CorrectValues ) {
 
     for( const auto& cases : files ) {
 
-        auto tatus = createPackerImpl( PackerType::Random );
-        Protocol prot { ProtocolType::Magic,  50, 1 };
+        auto tatus = createPackerImpl( PackerType::Random,  ProtocolType::Magic );
+        Protocol prot {  50, 1 };
         const string inputfile = "packer/bin/toPack/" + cases.second + ".txt";
 
         const string outputfile = "packer/bin/toRead/packed/random/" + cases.second + "/Mag_MIX.txt";

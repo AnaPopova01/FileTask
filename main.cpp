@@ -11,8 +11,8 @@
 using std::string;
 int main() {
 
-    auto tatus = createPackerImpl( PackerType::Aligned );
-    Protocol prot { ProtocolType::Standart,  9, 0 };
+    auto tatus = createPackerImpl( PackerType::Aligned, ProtocolType::Standart );
+    Protocol prot {  50, 0 };
 
     const string toPack = "/home/ann/WORK/work_qt/StringCoder/FilesAndStrings/bin/lolol.txt";
     const string packed = "/home/ann/WORK/work_qt/StringCoder/FilesAndStrings/bin/packed_lolol.txt";

@@ -29,12 +29,12 @@ void DataRead::readProcessing( const string& inputfile, const string& outputfile
 
                 originFile.read( ( char* )&value, sizeof( char ) );
 
-                if( data.size() > 2530 ) {
+// if( data.size() > 2530 ) {
 
-                    if( value == '&' ) {
-                        count++;
-                    }
-                }
+// if( value == '&' ) {
+// count++;
+// }
+// }
 
                 data += value;
             }
@@ -52,7 +52,7 @@ void DataRead::readProcessing( const string& inputfile, const string& outputfile
 
 void DataRead::getProtInfo() {
 
-    std::string str = data.substr( 0, 4 );
+    std::string str = data.substr( 0, std::to_string( keyword ).size() );
 
     if( std::stoi( str ) == keyword ) {
         stdProt = false;
@@ -121,62 +121,13 @@ void DataRead::divideHeadFromInfo() {
 
 void DataRead::printData() {
 
-    if( mixFlag == false ) {
-
-        for( const auto& [ key, value ] : strdata ) {
-            // std::cout << key << ": " << value << std::endl;
-            outfile << value;
-        }
-
-    } else {
-
-
+    for( const auto& [ key, value ] : strdata ) {
+        // std::cout << key << ": " << value << std::endl;
+        outfile << value;
     }
 }
 
-void DataRead::printPack() {
 
-
-    for( uint16_t nline = 0; nline < strdata.size(); nline++ ) {
-        int count = 0;
-
-
-        while( strdata[ nline ].size() != 0 ) {
-
-            std::string str = strdata[ nline ].substr( 0, 3 );
-            strdata[ nline ].erase( 0, 3 );
-            uint16_t num = std::stoi( str );
-
-            if( num == 0 ) {
-
-                if( kOfPackets != 0 ) {
-                    outfile << "\n";
-                }
-                kOfPackets++;
-            }
-
-            outfile << strdata[ nline ][ 0 ];
-            count++;
-            strdata[ nline ].erase( 0, 1 );
-
-        }
-
-        // cerr << nline << ") " << count << "\n";
-    }
-}
-
-// void DataRead::setMaxPacketSize( const uint16_t size ) {
-
-// if( size == 0 ) {
-// throw std::runtime_error( "max size of packed cant be equal 0" );
-
-// }
-// if( size < ( 12 + 1 ) ) {
-// throw std::runtime_error( "max size of packed cant be less than header size + service_symbols in data" );
-
-// }
-// this->N = size;
-// }
 
 // open file
 // read first two strings

@@ -1,5 +1,7 @@
 #include "dataPack/packerfactory.h"
 #include "dataPack/basepack.h"
+#include "dataPack/magicprot.h"
+#include "dataPack/standartprot.h"
 
 
 bool isInRange( uint32_t value, uint32_t left, uint32_t right ) {
@@ -39,43 +41,44 @@ Protocol getProtocol() {
     cin >> maxLength;
     cerr << "enter enable(1) or disable(0) mixing" << endl;
     cin >> mixfFlag;
-    Protocol prot { type, maxLength, mixfFlag };
+    Protocol prot { maxLength, mixfFlag }; // deleted type argument
     cerr << "-----------------------------------------------------" << endl;
     cerr << "packer created!" << endl;
     return prot;
 }
 
 
-std::unique_ptr< IPacker > createPackerImpl() {
+// std::unique_ptr< IPacker > createPackerImpl() {
 
-    PackerType type = getPackerType();
+// PackerType type = getPackerType();
+// std::unique_ptr< IPacker > ret;
+
+// switch( type ) {
+// case PackerType::Aligned:
+// ret = std::make_unique< protType >( PackerType::Aligned );
+// break;
+// case PackerType::Random:
+// ret = std::make_unique< protType >( PackerType::Random );
+// break;
+// default:
+// throw std::runtime_error( " unsupported packer type " + std::to_string( static_cast< int >( type ) ) );
+// break;
+// }
+
+// return ret;
+// }
+
+std::unique_ptr< IPacker > createPackerImpl( PackerType type, ProtocolType protType ) {
+
     std::unique_ptr< IPacker > ret;
 
-    switch( type ) {
-    case PackerType::Aligned:
-        ret = std::make_unique< BaseImpl >( PackerType::Aligned );
-        break;
-    case PackerType::Random:
-        ret = std::make_unique< BaseImpl >( PackerType::Random );
-        break;
-    default:
-        throw std::runtime_error( " unsupported packer type " + std::to_string( static_cast< int >( type ) ) );
-        break;
-    }
 
-    return ret;
-}
-
-std::unique_ptr< IPacker > createPackerImpl( PackerType type ) {
-
-    std::unique_ptr< IPacker > ret;
-
-    switch( type ) {
-    case PackerType::Aligned:
-        ret = std::make_unique< BaseImpl >( PackerType::Aligned );
+    switch( protType ) {
+    case ProtocolType::Standart:
+        ret = std::make_unique< StandartProt >( type );
         break;
-    case PackerType::Random:
-        ret = std::make_unique< BaseImpl >( PackerType::Random );
+    case ProtocolType::Magic:
+        ret = std::make_unique< MagicProt >( type );
         break;
     default:
         throw std::runtime_error( " unsupported packer type " );

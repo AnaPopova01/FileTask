@@ -25,11 +25,10 @@ private:
     void getProtInfo();
     void divideHeadFromInfo();
     void printData();
-    void printPack();
+    // void printPack();
 
     // protocol
     bool stdProt = 1;
-    bool mixFlag = 0;
     uint16_t N = 50; // max length of packet
 
     std::ofstream outfile;

@@ -9,9 +9,9 @@ using std::cin;
 using std::endl;
 
 
-std::unique_ptr< IPacker > createPackerImpl(); // make Impl using console
+// std::unique_ptr< IPacker > createPackerImpl(); // make Impl using console
 
-std::unique_ptr< IPacker > createPackerImpl( PackerType type );
+std::unique_ptr< IPacker > createPackerImpl( PackerType type, ProtocolType protType );
 
 ProtocolType getProtocolType();
 

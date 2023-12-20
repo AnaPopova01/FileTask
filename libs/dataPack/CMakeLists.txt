@@ -8,15 +8,18 @@ add_library(${PROJECT_NAME} SHARED
     include/dataPack/ipacker.h
     include/dataPack/packerfactory.h
     include/dataPack/basepack.h
+    include/dataPack/standartprot.h
+    include/dataPack/magicprot.h
 
-#    src/dataPack.cpp
-#    src/dataPack.h
+    source/magicprot.cpp
     source/packerfactory.cpp
-#    src/randPack.cpp
-#    src/randPack.h
-   source/basepack.cpp
+    source/standartprot.cpp
+    source/basepack.cpp
+
 
 )
+
+target_link_libraries(${PROJECT_NAME} PUBLIC threadPool )
 
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include/${PROJECT_NAME})

@@ -1,16 +1,20 @@
 #include "dataPack/basepack.h"
 
-BaseImpl::BaseImpl( PackerType type ) {
-
-
-    this->pack_type = type;
-}
-
 void BaseImpl::packProcessing( const std::string& inputfile, const std::string& outputfile, Protocol& protocol ) {
 
     setProtocol( protocol );
 
+    readFromFile( inputfile );
+
+    writeToFile( outputfile );
+
+}
+
+void BaseImpl::readFromFile( const std::string& inputfile ) {
+
     std::ifstream originFile( inputfile, std::ios::binary ); // open file with origin data
+    char value = 'z';
+    int count = 0;
 
     if( !originFile.is_open() ) {
 
@@ -18,45 +22,42 @@ void BaseImpl::packProcessing( const std::string& inputfile, const std::string& 
 
     } else {
 
-        this->outfile.open( outputfile, std::ios::binary ); // open file to write
-        if( !outfile.is_open() ) {
+        while( !originFile.eof() ) {
 
-            throw std::runtime_error( "cant open output packer file " );
+            originFile.read( ( char* )&value, sizeof( char ) );
+            count++;
+            // std::cerr << count << ") val = " << value << "\n"; // это пробел
+            data += value;
 
-        } else {
-
-            char value;
-            int count = 0;
-
-            while( !originFile.eof() ) {
-
-                originFile.read( ( char* )&value, sizeof( char ) );
-                count++;
-                // std::cerr << count << ") val = " << value << "\n"; // это пробел
-                data += value;
-
-
-            }
-            data.erase( data.size() - 1, 1 );
-            // std::cerr << "amount sym in origdata = " << count - 1 << "\n";
-            // std::cerr << "the last = " << value << "\n"; // это пробел
-
-            if( prot.type == ProtocolType::Standart ) {
-
-                addInfo();// добавляем служебную информацию
-            }
-
-            // float amount_of_packs = ( prot.N - headerSize ) / ( k_in_data + 1 );
-            // std::cerr << "amount of string = " <<  ceil( data.size() / ( k_in_data + 1 ) / amount_of_packs ) << std::endl;
-
-            formPack();
-            printvecdata();
-            outfile.close();
         }
-
+        data.erase( data.size() - 1, 1 );
     }
 
 }
+
+
+
+void BaseImpl::resetPackSpace() {
+
+    switch( type ) {
+
+    case PackerType::Aligned:
+
+        this->spaceInPack = maxSpace;
+        break;
+
+    case PackerType::Random:
+
+
+
+        this->spaceInPack = serviceDataFieldLen + 1 + ( 1 + rand() % ( prot.N - ( headerSize + serviceDataFieldLen + 1 ) ) );
+        // std::cerr << "spaceInPack = " << spaceInPack << "\n";
+        break;
+    }
+}
+
+
+
 
 void BaseImpl::formPack() {
 
@@ -66,12 +67,12 @@ void BaseImpl::formPack() {
     if( length > spaceInPack ) {
 
 
-        uint16_t kOfPacket = ( spaceInPack / ( k_in_data + 1 ) ); // какое количество пакетов можно добавить в текущую строку
+        uint16_t kOfPacket = ( spaceInPack / ( serviceDataFieldLen + 1 ) ); // какое количество пакетов можно добавить в текущую строку
         setkOfSym( kOfPacket );
-        for( uint16_t i = 0; i < kOfPacket * ( k_in_data + 1 ); i++ ) {
+        for( uint16_t i = 0; i < kOfPacket * ( serviceDataFieldLen + 1 ); i++ ) {
             str = str + data[ i ];
         }
-        data.erase( 0, kOfPacket * ( k_in_data + 1 ) );
+        data.erase( 0, kOfPacket * ( serviceDataFieldLen + 1 ) );
         finishPack( str );
         nextPacket();
         if( data.size() != 0 ) {
@@ -81,17 +82,17 @@ void BaseImpl::formPack() {
     } else if( length < spaceInPack ) {
 
 
-        setkOfSym( length / ( this->k_in_data + 1 ) );
+        setkOfSym( length / ( this->serviceDataFieldLen + 1 ) );
         str = data + str;
         resetPackSpace( spaceInPack - length );
         finishPack( str );
 
     } else if( length == spaceInPack ) {
-        setkOfSym( length / ( this->k_in_data + 1 ) );
+        setkOfSym( length / ( this->serviceDataFieldLen + 1 ) );
         str = data + str;
 
         finishPack( str );
-        // nextPacket();
+
 
     }
 
@@ -105,22 +106,15 @@ void BaseImpl::nextPacket() {
 
 }
 
-void BaseImpl::finishPack( std::string& str ) { // also add pack to common vector
 
-    if( prot.type == ProtocolType::Standart ) {
-        while( str.size() < maxSpace ) {
-            str = str + "&";
-        }
-    }
-    addHeadInfo( str );
-    vecdata.push_back( str );
-}
 
 void BaseImpl::printString( std::string& str ) {
 
     for( uint16_t i = 0; i < str.size(); i++ ) {
         outfile.write( ( char* )( &str[ i ] ), sizeof( char ) );
+        // std::cerr << str[ i ];
     }
+    std::cerr << "\n";
 }
 
 void BaseImpl::printvecdata() {
@@ -158,22 +152,6 @@ void BaseImpl::resetPackSpace( uint16_t newSpace  ) {
     this->spaceInPack = newSpace;
 }
 
-void BaseImpl::resetPackSpace() {
-
-    switch( pack_type ) {
-
-    case PackerType::Aligned:
-
-        this->spaceInPack = maxSpace;
-        break;
-
-    case PackerType::Random:
-        // srand( time( NULL ) );
-
-        this->spaceInPack = k_in_data + 1 + ( 1 + rand() % ( prot.N - ( headerSize + k_in_data + 1 ) ) );
-        break;
-    }
-}
 
 void BaseImpl::setkOfSym( uint16_t newK  ) {
 
@@ -182,65 +160,7 @@ void BaseImpl::setkOfSym( uint16_t newK  ) {
 
 
 
-void BaseImpl::addInfo() {
 
-    std::string payloadheader;
-    uint16_t endOfStr = data.size();
 
-    for( uint16_t i = 0; i < endOfStr; i++ ) {
-
-        payloadheader = std::to_string( i );
-        while( payloadheader.size() < this->k_in_data ) {
-            payloadheader = "0" + payloadheader;
-        }
-        data.insert( i * ( k_in_data + 1 ), payloadheader );
-    }
-}
-
-void BaseImpl::addHeadInfo( std::string& str ) {
-
-    if( prot.type == ProtocolType::Standart ) {
-
-        std::string header1 = std::to_string( currpackNum );
-        while( header1.size() != k_in_1stHead ) {
-            header1 = "0" + header1;
-        }
-        str = header1 + str;
-        // outfile << header1 << "\t";
-    }
-    if( prot.type == ProtocolType::Magic ) {
-
-        std::string header = std::to_string( keyword );
-        std::string header1 = std::to_string( currpackNum );
-        while( header1.size() != k_in_1stHead ) {
-            header1 = "0" + header1;
-        }
-        std::string header2 = std::to_string( kOfSym );
-        while( header2.size() != k_in_2ndHead ) {
-            header2 = "0" + header2;
-        }
-        str = header + header1 + header2 + str;
-        // outfile << header << "\t" << header1 << "\t" << header2 << "\t";
-    }
-
-}
-
-void BaseImpl::setProtocol( Protocol& protocol ) {
-    this->prot = protocol;
-    if( prot.type == ProtocolType::Standart ) {
-
-        headerSize = this->k_in_1stHead;
-
-    }
-    if( prot.type == ProtocolType::Magic ) {
-
-        headerSize = k_in_1stHead + k_in_2ndHead + ( std::to_string( keyword ) ).size();
-        k_in_data = 0;
-
-    }
-    this->maxSpace = prot.N - headerSize;
-
-    resetPackSpace();
-}
 
 
