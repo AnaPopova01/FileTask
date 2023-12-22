@@ -1,5 +1,8 @@
- #include "standartprot.h"
+#include "standartprot.h"
 #include "threadPool/threadpool.h"
+#include <future>
+
+std::mutex mute;
 
 void StandartProt::setProtocol( Protocol& protocol ) {
 
@@ -24,19 +27,37 @@ void StandartProt::writeToFile( const std::string& outputfile ) {
         if( ( type == PackerType::Aligned ) && ( prot.mixPackets == false ) ) {
 
             auto packetCount = getPacketsCount(); // количество пакетов на которые можно разделить данные
-            uint16_t length = getSubstrLen();
             int symCount = 0;
+
+            data = addServiceInfo( data, 0 );
+            alignData();
             std::string subStr;
 
-            ThreadPool pool (5);
+            std::mutex mtx;
 
+            auto hell { [ & ] ( const uint16_t j ) {
+                        std::lock_guard< std::mutex > guard( mtx );
+                        std::cerr << j << "st hell starts " << "\n";
+                        std::cerr << "subStr before OnePacked was =" << subStr << "\n";
+                        subStr = createOnePacket( j );
+                        std::cerr << "subStr after OnePacked is =" << subStr << "\n";
+
+                        strdata.emplace( j, subStr );
+                        std::cerr << "which version was emplaced =" << subStr << "\n";
+
+                    }
+            };
 
             for( uint16_t i = 0; i < packetCount; i++ ) {
 
-                subStr = createOnePacket( i, symCount );
+                std::cerr << i << "st thread start working " << "\n";
+                threads.emplace_back( hell, i );
 
-                strdata.emplace( currpackNum, subStr );
-                symCount += length;
+            }
+
+            for( uint16_t i = 0; i < packetCount; i++ ) {
+                threads[ i ].join();
+
 
             }
             printData();
@@ -90,20 +111,22 @@ void StandartProt::addHeadInfo( std::string& str ) {
 
 }
 
-std::string StandartProt::createOnePacket( uint16_t i, int symCount ) {
+std::string StandartProt::createOnePacket( uint16_t i ) {
 
     uint16_t length = getSubstrLen();
-    uint16_t startPos = i * length;
+    uint16_t startPos = ( i ) * length;
+
     std::string subStr = data.substr( startPos, length );
-    subStr = addServiceInfo( subStr, symCount );
-    return toFinishPack( subStr );
+    // std::cerr << "before addServiceInfo is " << subStr << "\n";
+    return toFinishPack( subStr, i );
+
 
 }
 
 
 uint16_t StandartProt::getSubstrLen() {
 
-    return trunc( maxSpace / ( serviceDataFieldLen + 1 ) );
+    return ( serviceDataFieldLen + 1 ) * trunc( maxSpace / ( serviceDataFieldLen + 1 ) );
 }
 
 
@@ -125,12 +148,12 @@ std::string StandartProt::addServiceInfo( std::string subStr, int symCount ) {
 }
 
 void StandartProt::alignData() {
-    int packetCount = getPacketsCount();
-    if( data.size() <  ( packetCount * maxSpace ) ) {
-        while( data.size() <  packetCount * maxSpace ) {
-            data = data + "&";
-        }
+    int packetCount = ceil( data.size() / ( ( serviceDataFieldLen + 1 ) * trunc( maxSpace / ( serviceDataFieldLen + 1 ) ) ) );
+
+    while( data.size() <  packetCount * maxSpace ) {
+        data = data + "&";
     }
+
 
 }
 
@@ -144,14 +167,22 @@ int StandartProt::getPacketsCount() {
     return amountOfPackets;
 }
 
-std::string StandartProt::toFinishPack( std::string subStr ) {
+std::string StandartProt::toFinishPack( std::string subStr, uint16_t i ) {
 
     while( subStr.size() < spaceInPack ) {
         subStr = subStr + "&";
     }
 
-    addHeadInfo( subStr );
-    currpackNum++;
+    std::string header1 = std::to_string( i );
+    while( header1.size() != k_in_1stHead ) {
+        header1 = "0" + header1;
+    }
+    subStr = header1 + subStr;
+
+
+    // addHeadInfo( subStr );
+
+
     return subStr;
 }
 
@@ -162,5 +193,6 @@ void StandartProt::printData() {
         // std::cout << key << ": " << value << std::endl;
         outfile << value;
     }
+    std::cerr << "некоторые пакеты повторяются" << "\n\n\n";
 }
 

@@ -114,7 +114,7 @@ void BaseImpl::printString( std::string& str ) {
         outfile.write( ( char* )( &str[ i ] ), sizeof( char ) );
         // std::cerr << str[ i ];
     }
-    std::cerr << "\n";
+    // std::cerr << "\n";
 }
 
 void BaseImpl::printvecdata() {

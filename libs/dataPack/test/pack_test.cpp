@@ -60,12 +60,13 @@ TEST( PackerTests, alignedType_StandartProt_CorrectValues ) {
     files[ 2 ] = "one_sym";
     files[ 3 ] = "rand_lines";
     files[ 4 ] = "rand_sym";
+    // files[ 5 ] = "some_sym";
 
     for( const auto& cases : files ) {
 
         std::cerr << "case = " << cases.second << endl;
         auto tatus = createPackerImpl( PackerType::Aligned, ProtocolType::Standart );
-        Protocol prot {   50, 0 };
+        Protocol prot { 50, 0 };
         const string inputfile = "packer/bin/toPack/" + cases.second + ".txt";
 
         const string outputfile = "packer/bin/toRead/packed/aligned/" + cases.second + "/Std.txt";

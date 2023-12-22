@@ -40,7 +40,6 @@ protected:
     std::vector< std::string > vecdata; // вектор пакетов для их перемешивания
     std::map< std::uint16_t, std::string > strdata;
 
-    std::map< std::uint16_t, std::string > futureData;
 
     void readFromFile( const std::string& inputfile );
     virtual void writeToFile( const std::string& outputfile ) = 0;

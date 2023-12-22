@@ -2,6 +2,7 @@
 #define ALIGNEDPACKER_H
 #include "ipacker.h"
 #include "basepack.h"
+#include <thread>
 
 class StandartProt: public BaseImpl {
 public:
@@ -13,12 +14,14 @@ public:
 private:
 
     void printData();
-    std::string toFinishPack( std::string subStr );
+    std::string toFinishPack(std::string subStr , uint16_t i);
     int getPacketsCount();
     void alignData();
     std::string addServiceInfo( std::string subStr, int symCount );
     uint16_t getSubstrLen();
-    std::string createOnePacket( uint16_t i, int symCount );
+    std::string createOnePacket( uint16_t i );
+
+    std::vector< std::thread > threads;
 
 
     void setProtocol( Protocol& protocol ) override final;
