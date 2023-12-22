@@ -2,7 +2,8 @@
 #include "threadPool/threadpool.h"
 #include <future>
 
-std::mutex mute;
+// std::mutex mute;
+std::mutex mtx;
 
 void StandartProt::setProtocol( Protocol& protocol ) {
 
@@ -31,26 +32,36 @@ void StandartProt::writeToFile( const std::string& outputfile ) {
 
             data = addServiceInfo( data, 0 );
             alignData();
-            std::string subStr;
 
-            std::mutex mtx;
+
+
 
             auto hell { [ & ] ( const uint16_t j ) {
-                        std::lock_guard< std::mutex > guard( mtx );
-                        std::cerr << j << "st hell starts " << "\n";
-                        std::cerr << "subStr before OnePacked was =" << subStr << "\n";
-                        subStr = createOnePacket( j );
-                        std::cerr << "subStr after OnePacked is =" << subStr << "\n";
 
-                        strdata.emplace( j, subStr );
-                        std::cerr << "which version was emplaced =" << subStr << "\n";
+                        std::string subStr;
+                        {
+
+                            std::lock_guard< std::mutex > guard( mtx );
+                            // std::cerr << j << "st hell starts " << "\n";
+                            // std::cerr << j << "subStr before OnePacked was =" << subStr << "\n";
+
+                        }
+
+                        subStr = createOnePacket( j );
+
+                        {
+                            std::lock_guard< std::mutex > guard( mtx );
+                            // std::cerr << j << "st subStr after OnePacked is =" << subStr << "\n";
+                            strdata.emplace( j, subStr );
+                            // std::cerr << j << "which version was emplaced =" << subStr << "\n";
+                        }
 
                     }
             };
 
             for( uint16_t i = 0; i < packetCount; i++ ) {
 
-                std::cerr << i << "st thread start working " << "\n";
+                // std::cerr << i << "st thread start working " << "\n";
                 threads.emplace_back( hell, i );
 
             }
@@ -193,6 +204,6 @@ void StandartProt::printData() {
         // std::cout << key << ": " << value << std::endl;
         outfile << value;
     }
-    std::cerr << "некоторые пакеты повторяются" << "\n\n\n";
+    // std::cerr << "некоторые пакеты повторяются" << "\n\n\n";
 }
 

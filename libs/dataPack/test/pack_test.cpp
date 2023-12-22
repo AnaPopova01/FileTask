@@ -60,7 +60,7 @@ TEST( PackerTests, alignedType_StandartProt_CorrectValues ) {
     files[ 2 ] = "one_sym";
     files[ 3 ] = "rand_lines";
     files[ 4 ] = "rand_sym";
-    // files[ 5 ] = "some_sym";
+    files[ 5 ] = "some_sym";
 
     for( const auto& cases : files ) {
 
