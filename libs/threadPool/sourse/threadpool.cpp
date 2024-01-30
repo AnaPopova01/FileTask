@@ -1,29 +1,51 @@
 #include "threadPool/threadpool.h"
 
 
-ThreadPool::ThreadPool( uint32_t& threadAmount ) : threadAmount( threadAmount ) {
+ThreadPool::ThreadPool( int threadAmount ) : threadAmount( threadAmount ) {
 
     threads.reserve( threadAmount );
+    std::cerr << "Pool created, thread count: " << threadAmount << std::endl;
 
-// for( uint32_t i = 0; i < threadAmount; ++i ) {
-// threads.emplace_back( &ThreadPool::processing );
-// }
-
-}
-
-void ThreadPool::processing() {
-
+    for( uint32_t i = 0; i < threadAmount; ++i ) {
+        threads.push_back( std::thread( &ThreadPool::waitForProcessing, this ) );
+    }
 
 }
 
-void addTask( std::unique_ptr< int > task ) {
+bool ThreadPool::IsQueueEmpty() {
 
+    // checking is there any task in queue
+    std::unique_lock< std::mutex > lock( taskMtx );
+    return taskQueue.empty();
 
 }
 
+void ThreadPool::waitForProcessing() { // режим ожидания, ждет таски
 
-void stop() {
 
-    // if can stop (queue is empty) then
-    // all threads join
+    if( stopFlag == false ) {
+        IsQueueEmpty() ? waitForProcessing() : processing();
+    }
+
+}
+
+bool ThreadPool::waitForStop() {
+
+    // std::cerr << "Waiting for stop \n";
+
+    IsQueueEmpty() ? stopFlag = true : waitForStop();
+    return stopFlag;
+}
+
+void ThreadPool::stop() {
+
+    if( waitForStop() ) {
+
+        for( uint16_t i = 0; i < threads.size(); i++ ) {
+            threads[ i ].join();
+        }
+        // std::cerr << " Pool stopped \n";
+
+    }
+
 }

@@ -3,25 +3,36 @@
 #include "ipacker.h"
 #include "basepack.h"
 #include <thread>
+#include <future>
+#include "threadPool/threadpool.h"
+#include <functional>
+
+
+using std::string;
+using std::vector;
+using std::promise;
+using std::future;
+using std::ref;
 
 class StandartProt: public BaseImpl {
 public:
     StandartProt( PackerType prtype ) {
         this->type = prtype;
     }
-
+    friend class ThreadPool;
 
 private:
 
     void printData();
-    std::string toFinishPack(std::string subStr , uint16_t i);
+    string toFinishPack( string subStr, uint16_t i, uint16_t spaceInPack, uint8_t k_in_1stHead );
     int getPacketsCount();
     void alignData();
-    std::string addServiceInfo( std::string subStr, int symCount );
+    string addServiceInfo( string subStr );
     uint16_t getSubstrLen();
-    std::string createOnePacket( uint16_t i );
+    static string makeOnePack( const uint16_t j, string subStr, uint16_t freeSpaceInPack, uint8_t amountOfSymIn1Header );
+    void connectVec( int packetCount );
 
-    std::vector< std::thread > threads;
+    vector< std::thread > threads;
 
 
     void setProtocol( Protocol& protocol ) override final;

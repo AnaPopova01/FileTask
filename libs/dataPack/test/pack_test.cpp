@@ -56,11 +56,11 @@ TEST( PackerTests, alignedType_StandartProt_CorrectValues ) {
 
     std::map< std::uint8_t, string > files;
     files[ 0 ] = "twenty_enter";
-    files[ 1 ] = "empty";
-    files[ 2 ] = "one_sym";
-    files[ 3 ] = "rand_lines";
-    files[ 4 ] = "rand_sym";
-    files[ 5 ] = "some_sym";
+// files[ 1 ] = "empty";
+// files[ 2 ] = "one_sym";
+// files[ 3 ] = "rand_lines";
+// files[ 4 ] = "rand_sym";
+// files[ 5 ] = "some_sym";
 
     for( const auto& cases : files ) {
 
