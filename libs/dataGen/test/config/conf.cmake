@@ -1,6 +1,9 @@
 set(SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/test/config)
 set(DST_DIR ${TEST_OUTPUT_PATH})
 
+message("SRC_DIR: " ${SRC_DIR})
+message("DST_DIR: " ${DST_DIR})
+
 add_custom_target(${PROJECT_NAME}_tconf 
     COMMAND ${CMAKE_COMMAND} -E create_symlink ${SRC_DIR} ${DST_DIR}/generator
 )

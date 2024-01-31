@@ -29,9 +29,9 @@ private:
     void alignData();
     string addServiceInfo( string subStr );
     uint16_t getSubstrLen();
-    // static string makeOnePack( const uint16_t j, string subStr, uint16_t freeSpaceInPack, uint8_t amountOfSymIn1Header );
     static string makeOnePack( const uint16_t idOfPacket, string subStr, const uint16_t freeSpaceInPack, const uint8_t amountOfSymIn1Header );
-    void connectVec( int packetCount );
+    void writeNoThread();
+    void writeThread();
 
     vector< std::thread > threads;
 

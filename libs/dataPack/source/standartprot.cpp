@@ -5,11 +5,8 @@ std::mutex mtx;
 void StandartProt::setProtocol( Protocol& protocol ) {
 
     this->prot = protocol;
-
     headerSize = this->k_in_1stHead;
-
     this->maxSpace = prot.N - headerSize;
-
     resetPackSpace();
 }
 
@@ -85,67 +82,60 @@ void StandartProt::writeToFile( const std::string& outputfile ) {
 
     this->outfile.open( outputfile, std::ios::binary ); // open file to write
     if( !outfile.is_open() ) {
-
         throw std::runtime_error( "cant open output packer file " );
-
     } else {
 
         if( ( type == PackerType::Aligned ) && ( prot.mixPackets == false ) ) {
-
-            auto packetCount =  getPacketsCount();// количество пакетов на которые можно разделить данные
-            auto length = getSubstrLen();
-            auto freeSpaceInPack = spaceInPack;
-            auto amountOfSymIn1Header = k_in_1stHead;
-
-            data = addServiceInfo( data );
-            alignData();
-
-            vector< std::future< string > > futureVec;
-            vector< string > resultVec;
-
-            futureVec.resize( packetCount );
-            resultVec.resize( packetCount );
-
-
-            ThreadPool pool( 3 );
-
-            for( uint16_t i = 0; i < packetCount; i++ ) {
-
-                string substr = data.substr( 0, length );
-
-                data.erase( 0, length );
-
-                futureVec[ i ] = pool.addTask( [ i, substr, freeSpaceInPack, amountOfSymIn1Header ] () {
-
-                    return makeOnePack( i, substr, freeSpaceInPack, amountOfSymIn1Header );
-
-                } );
-
-            }
-            for( uint16_t i = 0; i < packetCount; i++ ) {
-
-                // resultVec[ i ] = futureVec[ i ].get();
-                strdata.emplace( i, futureVec[ i ].get() );
-
-            }
-            pool.stop();
-
-            printData();
-
+            writeThread();
         } else {
-
-            addInfo();// добавляем служебную информацию
-            formPack();
-            printvecdata();
+            writeNoThread();
         }
         outfile.close();
     }
-
 }
 
-// подгоняет сабстроку до финального размера и добавляет хедер т.е. порядковый номер пакета
-std::string StandartProt::makeOnePack( const uint16_t idOfPacket, string subStr, const uint16_t freeSpaceInPack, const uint8_t amountOfSymIn1Header ) {
 
+void StandartProt::writeThread() {
+
+    auto packetCount =  getPacketsCount();// количество пакетов на которые можно разделить данные
+    auto length = getSubstrLen();
+    auto freeSpaceInPack = spaceInPack;
+    auto amountOfSymIn1Header = k_in_1stHead;
+    data = addServiceInfo( data );
+    alignData();
+
+    vector< std::future< string > > futureVec( packetCount );
+    vector< string > resultVec( packetCount );
+
+    ThreadPool pool( 3 );
+
+    for( uint16_t i = 0; i < packetCount; i++ ) {
+
+        string substr = data.substr( i * length, length );
+
+        futureVec[ i ] = pool.addTask( [ i, substr, freeSpaceInPack, amountOfSymIn1Header ] () {
+
+            return makeOnePack( i, substr, freeSpaceInPack, amountOfSymIn1Header );
+
+        } );
+    }
+
+    for( uint16_t i = 0; i < packetCount; i++ ) {
+        strdata.emplace( i, futureVec[ i ].get() );
+    }
+    pool.stop();
+    printData();
+}
+
+void StandartProt::writeNoThread() {
+
+    addInfo();// добавляем служебную информацию
+    formPack();
+    printvecdata();
+}
+
+std::string StandartProt::makeOnePack( const uint16_t idOfPacket, string subStr, const uint16_t freeSpaceInPack, const uint8_t amountOfSymIn1Header ) {
+// подгоняет сабстроку до финального размера и добавляет хедер т.е. порядковый номер пакета
 
     while( subStr.size() < freeSpaceInPack ) {
         subStr = subStr + "&";

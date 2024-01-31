@@ -37,8 +37,6 @@ TEST( GeneratorTests, readConfig_readValues_NullPackSize ) {
     } catch( std::runtime_error& e ) {
 
         ASSERT_STREQ( e.what(), "null value of package length in configFile" );
-
-
     }
 
 }
@@ -51,10 +49,7 @@ TEST( GeneratorTests, readConfig_readValues_NullAmountOfString ) {
     try {
         obj.readConfig( path );
     } catch( std::runtime_error& e ) {
-
-
         ASSERT_STREQ( e.what(), "null value of quantity of strings in configFile" );
-
     }
 
 }
