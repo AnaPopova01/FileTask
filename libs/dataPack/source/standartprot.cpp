@@ -1,7 +1,5 @@
 #include "standartprot.h"
 
-
-// std::mutex mute;
 std::mutex mtx;
 
 void StandartProt::setProtocol( Protocol& protocol ) {
@@ -14,6 +12,7 @@ void StandartProt::setProtocol( Protocol& protocol ) {
 
     resetPackSpace();
 }
+
 // here lays working multithreading version of writeToFile
 /*
    void StandartProt::writeToFile( const std::string& outputfile ) {
@@ -93,60 +92,44 @@ void StandartProt::writeToFile( const std::string& outputfile ) {
 
         if( ( type == PackerType::Aligned ) && ( prot.mixPackets == false ) ) {
 
-            auto packetCount = getPacketsCount(); // количество пакетов на которые можно разделить данные
+            auto packetCount =  getPacketsCount();// количество пакетов на которые можно разделить данные
             auto length = getSubstrLen();
+            auto freeSpaceInPack = spaceInPack;
+            auto amountOfSymIn1Header = k_in_1stHead;
+
             data = addServiceInfo( data );
             alignData();
-            auto freeSpaceInPack = spaceInPack;
-            uint8_t amountOfSymIn1Header = k_in_1stHead;
 
-            vector< std::promise< string > > promiseVec;
             vector< std::future< string > > futureVec;
-            promiseVec.reserve( packetCount );
-            futureVec.reserve( packetCount );
-            for( int var = 0; var < packetCount; ++var ) {
+            vector< string > resultVec;
 
-                futureVec[ var ] = promiseVec[ var ].get_future();
-            }
-
-            // string subStr;
-            // uint16_t i = 0;
-            // auto subStr = data.substr(  0  * length, length );
-
-// auto taskBind = std::bind( makeOnePack, 0,  subStr, freeSpaceInPack, amountOfSymIn1Header );
-
-// auto returnOnePack { [  ] ( string subStr, uint16_t i ) {
-// subStr = taskBind();
-// promiseVec[ i ].set_value( subStr );
-// }
-// };
+            futureVec.resize( packetCount );
+            resultVec.resize( packetCount );
 
 
-// std::cerr << "subStr before " << subStr << "\n";
-// returnOnePack();
-// std::cerr << "subStr after " << futureStr.get() << "\n";
-
-
-            uint16_t poolCounter = 1;
-            ThreadPool pool( poolCounter );
+            ThreadPool pool( 3 );
 
             for( uint16_t i = 0; i < packetCount; i++ ) {
 
-// auto subStr = data.substr(  i  * length, length );
-// auto taskBind = std::bind( makeOnePack, i, subStr, freeSpaceInPack, amountOfSymIn1Header );
-// pool.addTask(  returnOnePack( subStr, i ) );
+                string substr = data.substr( 0, length );
 
-// std::cerr << "\t" << i << "st task " << "added \n";
-// {
-// std::lock_guard< std::mutex > guard( mtx );
-// std::cerr << j << "st subStr after OnePacked is =" << subStr << "\n";
-// strdata.emplace( j, subStr );
-// std::cerr << j << "which version was emplaced =" << subStr << "\n";
-// }
+                data.erase( 0, length );
+
+                futureVec[ i ] = pool.addTask( [ i, substr, freeSpaceInPack, amountOfSymIn1Header ] () {
+
+                    return makeOnePack( i, substr, freeSpaceInPack, amountOfSymIn1Header );
+
+                } );
 
             }
-            // collectResults(){for (in range){emplace (futureData.i,future)}};
+            for( uint16_t i = 0; i < packetCount; i++ ) {
+
+                // resultVec[ i ] = futureVec[ i ].get();
+                strdata.emplace( i, futureVec[ i ].get() );
+
+            }
             pool.stop();
+
             printData();
 
         } else {
@@ -160,56 +143,23 @@ void StandartProt::writeToFile( const std::string& outputfile ) {
 
 }
 
+// подгоняет сабстроку до финального размера и добавляет хедер т.е. порядковый номер пакета
+std::string StandartProt::makeOnePack( const uint16_t idOfPacket, string subStr, const uint16_t freeSpaceInPack, const uint8_t amountOfSymIn1Header ) {
 
-
-string StandartProt::makeOnePack( const uint16_t j, string subStr, uint16_t freeSpaceInPack, uint8_t amountOfSymIn1Header ) {
-
-// {
-// std::lock_guard< std::mutex > guard( mtx );
-// std::cerr << j << " st hell starts " << "\n";
-// std::cerr << j << "subStr before OnePacked was =" << subStr << "\n";
-// }
 
     while( subStr.size() < freeSpaceInPack ) {
         subStr = subStr + "&";
     }
 
-    std::string header1 = std::to_string( j );
+    std::string header1 = std::to_string( idOfPacket );
     while( header1.size() != amountOfSymIn1Header ) {
         header1 = "0" + header1;
     }
     subStr = header1 + subStr;
-/*
-   {
-   std::lock_guard< std::mutex > guard( mtx );
-   std::cerr << j << " st hell stop " << "\n";
-   std::cerr << j << "subStr after OnePacked  =" << subStr << "\n";
-
-   }*/
 
     return subStr;
 
-
 }
-
-// void StandartProt::connectVec( int packetCount ) {
-
-// promiseVec.reserve( packetCount );
-// futureVec.reserve( packetCount );
-// for( int var = 0; var < packetCount; ++var ) {
-
-// futureVec[ var ] = promiseVec[ var ].get_future();
-// }
-
-// }
-
-
-// {
-// std::lock_guard< std::mutex > guard( mtx );
-// std::cerr << j << "st subStr after OnePacked is =" << subStr << "\n";
-// strdata.emplace( j, subStr );
-// std::cerr << j << "which version was emplaced =" << subStr << "\n";
-// }
 
 
 void StandartProt::finishPack( std::string& str ) { // also add pack to common vector
@@ -249,10 +199,6 @@ void StandartProt::addHeadInfo( std::string& str ) {
 
 }
 
-// std::string StandartProt::createOnePacket( uint16_t i,uint16_t length ) {
-//// std::cerr << "before addServiceInfo is " << subStr << "\n";
-// }
-
 
 uint16_t StandartProt::getSubstrLen() {
 
@@ -260,7 +206,7 @@ uint16_t StandartProt::getSubstrLen() {
 }
 
 
-std::string StandartProt::addServiceInfo( std::string subStr ) {
+std::string StandartProt::addServiceInfo( std::string subStr ) { // инфа к каждому полезному символу
 
     int symCount = 0;
     std::string payloadheader;
@@ -278,7 +224,7 @@ std::string StandartProt::addServiceInfo( std::string subStr ) {
     return subStr;
 }
 
-void StandartProt::alignData() {
+void StandartProt::alignData() { //
     int packetCount = ceil( data.size() / ( ( serviceDataFieldLen + 1 ) * trunc( maxSpace / ( serviceDataFieldLen + 1 ) ) ) );
 
     while( data.size() <  packetCount * maxSpace ) {
@@ -316,7 +262,7 @@ std::string StandartProt::toFinishPack( std::string subStr, uint16_t i, uint16_t
 void StandartProt::printData() {
 
     for( const auto& [ key, value ] : strdata ) {
-        std::cerr << key << ": " << value << std::endl;
+        // std::cerr << key << ": " << value << std::endl;
         outfile << value;
     }
 }

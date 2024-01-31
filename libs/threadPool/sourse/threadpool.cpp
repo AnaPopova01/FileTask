@@ -4,7 +4,7 @@
 ThreadPool::ThreadPool( int threadAmount ) : threadAmount( threadAmount ) {
 
     threads.reserve( threadAmount );
-    std::cerr << "Pool created, thread count: " << threadAmount << std::endl;
+    // std::cerr << "Pool created, thread count: " << threadAmount << std::endl;
 
     for( uint32_t i = 0; i < threadAmount; ++i ) {
         threads.push_back( std::thread( &ThreadPool::waitForProcessing, this ) );
@@ -15,7 +15,8 @@ ThreadPool::ThreadPool( int threadAmount ) : threadAmount( threadAmount ) {
 bool ThreadPool::IsQueueEmpty() {
 
     // checking is there any task in queue
-    std::unique_lock< std::mutex > lock( taskMtx );
+    // std::unique_lock< std::mutex > lock( taskMtx );
+    std::lock_guard< std::mutex > guard( taskMtx );
     return taskQueue.empty();
 
 }
